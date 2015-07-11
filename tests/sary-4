@@ -1,0 +1,31 @@
+#! /bin/sh
+
+sary=../src/sary
+mksary=../src/mksary
+
+# can handle the empty file?
+cat /dev/null > tmp.0
+$mksary tmp.0 > /dev/null   # may cause core dump?
+test "$?" != "0" && exit 1
+$sary "foo" tmp.0 || exit 1
+test "$?" != "0" && exit 1
+
+cat /dev/null > tmp.0
+$mksary -b tmp.0 > /dev/null   # may cause core dump?
+test "$?" != "0" && exit 1
+$sary "foo" tmp.0 || exit 1
+test "$?" != "0" && exit 1
+
+# can handle a 1-byte file?
+echo -n "x" > tmp.1
+$mksary tmp.1 > /dev/null
+test "$?" != "0" && exit 1
+test `$sary "x" tmp.1` = "x" || exit 1
+
+# can handle a 2-byte file?
+echo -n "xx" > tmp.2
+$mksary tmp.2 >/dev/null
+test "$?" != "0" && exit 1
+test `$sary "xx" tmp.2` = "xx" || exit 1
+
+exit 0

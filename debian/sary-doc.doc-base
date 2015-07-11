@@ -1,0 +1,9 @@
+Document: sary-doc
+Title: Suffix Array Manual
+Author: Satoru Takabayashi  <satoru-t@is.aist-nara.ac.jp>
+Abstract: This manual describes what suffix array is.
+Section: Apps/Programming
+
+Format: HTML
+Index: /usr/share/doc/sary/docs/en/suffix-array.html
+Files: /usr/share/doc/sary/docs/en/suffix-array.html

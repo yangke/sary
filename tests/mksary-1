@@ -1,0 +1,35 @@
+#! /bin/sh
+
+mksary=../src/mksary
+
+if sass --version 2> /dev/null | grep "sass of SUFARY" >/dev/null; then
+    echo "do nothing" > /dev/null
+else
+    echo "This test requires SUFARY's mkary."
+    echo "<http://cl.aist-nara.ac.jp/lab/nlt/ss/>"
+    echo "NOTE: 2.3.5 or later is required."
+    exit 1
+fi
+
+cat -n ../configure > tmp.configure
+
+mkary tmp.configure >/dev/null 2>&1
+mv tmp.configure.ary tmp.configure.sufary
+
+$mksary -q tmp.configure
+mv tmp.configure.ary tmp.configure.sary
+
+cmp tmp.configure.sufary tmp.configure.sary
+test $? != "0" && exit 1
+
+
+# EUC-JP handling.
+mkary eucjp.txt >/dev/null 2>&1
+mv eucjp.txt.ary tmp.eucjp.txt.sufary
+
+$mksary -q -c EUC-JP eucjp.txt >/dev/null 2>&1
+mv eucjp.txt.ary tmp.eucjp.txt.sary
+
+cmp tmp.eucjp.txt.sufary tmp.eucjp.txt.sary
+test $? != "0" && exit 1
+exit 0

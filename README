@@ -1,0 +1,32 @@
+Sary - a set of a suffix array library and tools
+
+Sary is a suffix array library and tools. It provides fast
+full-text search facilities for text files on the order of
+10 to 100 MB using a data structure called a suffix array.
+It can also search specific fields in a text file by
+assigning index points to those fields.  Sary is a free
+software under the terms of the GNU Lesser General Public
+License version 2. See the COPYING file for details.
+
+The latest version is available at:
+<http://sary.namazu.org/>
+
+Characteristics:
+
+  * Fast full-text search for huge text files.
+    - With suffix array.  `mmap' are used for performance.
+  * Flexible construction of suffix array.
+    - Indexer can be easily extended.
+  * Useful tools
+    - mksary: constructs suffix array.
+    - sary: performs full-text search using suffix array.
+  * Easy-to-understand source codes. (I hope so.)
+    - Written in C but OO fashion. Simple and compact.
+
+Requirements:
+
+  * GLib <http://developer.gnome.org/doc/API/glib/>
+    - Available at <ftp://ftp.gtk.org/pub/gtk/>
+
+--
+satoru@namazu.org

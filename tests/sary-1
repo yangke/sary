@@ -1,0 +1,17 @@
+#! /bin/sh
+
+TEXT=abcdefghijklm
+
+sary=../src/sary
+mksary=../src/mksary
+
+echo $TEXT > tmp.text
+
+$mksary -q tmp.text
+
+for pat in `echo $TEXT | perl all-substrs.pl`; do
+    out=`$sary $pat tmp.text`
+    test "$out" != "$TEXT" && echo $pat && exit 1
+done
+
+exit 0

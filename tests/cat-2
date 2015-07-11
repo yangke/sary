@@ -1,0 +1,19 @@
+#! /bin/sh
+
+#
+# Similar to cat-1 but this is a test for sary_searcher_get_next_position.
+# Reproductivity test.
+#
+
+mksary=../src/mksary
+cat=../src/cat-test2
+
+# Must produce the same contents.
+for file in COPYING configure ChangeLog; do
+    cat -n ../$file > tmp.$file
+    $mksary -q  tmp.$file
+    $cat tmp.$file > tmp.$file.cat
+    cmp tmp.$file tmp.$file.cat || exit 1
+done
+
+exit 0

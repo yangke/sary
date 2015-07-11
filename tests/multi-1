@@ -1,0 +1,60 @@
+#! /bin/sh
+
+mksary=../src/mksary
+multi=../src/multi-test
+
+cat > tmp.patterns1 <<'EOF'
+a
+EOF
+
+cat > tmp.patterns2 <<'EOF'
+a
+b
+EOF
+
+cat > tmp.patterns3 <<'EOF'
+a
+b
+c
+EOF
+
+cat > tmp.patterns4 <<'EOF'
+a
+ab
+bc
+x
+xy
+yz
+EOF
+
+cat > tmp.patterns5 <<'EOF'
+あ
+あい
+いうえお
+うえ
+お
+EOF
+
+cp ../configure tmp.configure
+$mksary -q tmp.configure
+
+# Must produce the same contents.
+for i in tmp.patterns?; do
+    cp $i tmp.patterns
+    fgrep -f tmp.patterns tmp.configure > tmp.fgrep
+    $multi   tmp.patterns tmp.configure > tmp.sary
+    cmp tmp.fgrep tmp.sary || exit 1
+done
+
+cat -n eucjp.txt > tmp.eucjp.txt
+$mksary -q -c EUC-JP tmp.eucjp.txt
+
+# Must produce the same contents.
+for i in tmp.patterns?; do
+    cp $i tmp.patterns
+    fgrep -f tmp.patterns tmp.eucjp.txt > tmp.fgrep
+    $multi   tmp.patterns tmp.eucjp.txt > tmp.sary
+    cmp tmp.fgrep tmp.sary || exit 1
+done
+
+exit 0

@@ -1,0 +1,28 @@
+#! /bin/sh
+
+# Test for -s and -e option.
+
+sary=../src/sary
+mksary=../src/mksary
+
+cp tagged.txt tmp.tagged.txt
+$mksary -q tmp.tagged.txt
+
+for pat in "foo" "bar" "baz" "quux"
+do
+   $sary -s '<p>' -e '</p>' $pat tmp.tagged.txt >tmp.sary
+   cmp tmp.tagged.txt tmp.sary || exit 1
+done
+
+cp ../COPYING tmp.COPYING
+$mksary -q tmp.COPYING
+
+# Must produce the same contents.
+$sary -s /nonexistent/ -e /tags/ GNU tmp.COPYING > tmp.sary
+cmp tmp.COPYING tmp.sary || exit 1
+
+# New test since Sary 1.0.4
+$mksary -q repeated.txt
+../src/repeated-test repeated.txt
+
+exit 0

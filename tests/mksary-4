@@ -1,0 +1,18 @@
+#! /bin/sh
+# test for mksary -b
+
+mksary=../src/mksary
+
+cp ../COPYING   tmp.COPYING
+cp ../configure tmp.configure
+
+for target in tmp.COPYING tmp.configure; do
+    $mksary -q     -a tmp.mksary-1 $target
+    $mksary -q -b0 -a tmp.mksary-2 $target
+    $mksary -q -b1 -a tmp.mksary-3 $target
+
+    cmp tmp.mksary-1 tmp.mksary-2 || exit 1
+    cmp tmp.mksary-2 tmp.mksary-3 || exit 1
+done
+
+exit 0

@@ -1,0 +1,3 @@
+const int sary_major_version = @SARY_MAJOR_VERSION@;
+const int sary_minor_version = @SARY_MINOR_VERSION@;
+const int sary_micro_version = @SARY_MICRO_VERSION@;

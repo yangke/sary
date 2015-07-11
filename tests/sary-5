@@ -1,0 +1,27 @@
+#! /bin/sh
+
+# Test for -l option of sary.
+
+sary=../src/sary
+mksary=../src/mksary
+
+if sass --version 2> /dev/null | grep "sass of SUFARY" >/dev/null; then
+    echo "do nothing" > /dev/null
+else
+    echo "This test requires SUFARY's sass."
+    echo "<http://cl.aist-nara.ac.jp/lab/nlt/ss/>"
+    echo "NOTE: 2.3.5 or later is required."
+    exit 1
+fi
+
+cat -n ../configure > tmp.configure
+
+$mksary -q tmp.configure
+
+for pat in "sed" "gnu" "ac_" "config"; do
+   sass      $pat tmp.configure > tmp.sass
+   $sary -l  $pat tmp.configure > tmp.sary
+   cmp tmp.sass tmp.sary || exit 1
+done
+
+exit 0

@@ -1,0 +1,18 @@
+#! /bin/sh
+
+# Test for -i option of sary.
+
+sary=../src/sary
+mksary=../src/mksary
+
+cat -n ../COPYING > tmp.COPYING
+
+$mksary -q tmp.COPYING
+
+for pat in "gnu" "lesser" "public" "license" "e" "a" "p" ""; do
+   grep  -i  "$pat" tmp.COPYING > tmp.grep
+   $sary -i  "$pat" tmp.COPYING > tmp.sary
+   cmp tmp.grep tmp.sary || exit 1
+done
+
+exit 0

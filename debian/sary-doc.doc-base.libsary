@@ -1,0 +1,11 @@
+Document: sary-doc-libsary
+Title: A Suffix Array Library Manual
+Author: Satoru Takabayashi  <satoru-t@is.aist-nara.ac.jp>
+Abstract: This manual describes what libsary is
+ and how it can be used to
+ manage online manuals on Debian systems.
+Section: Apps/Programming
+
+Format: HTML
+Index: /usr/share/doc/sary/docs/en/libsary.html
+Files: /usr/share/doc/sary/docs/en/libsary.html

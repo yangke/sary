@@ -1,0 +1,34 @@
+#! /bin/sh
+
+# Test for -i option of sary. Part 2.
+
+sary=../src/sary
+mksary=../src/mksary
+
+( echo 'foobar' | perl gen-icase-data.pl;
+  echo 'foobaz' | perl gen-icase-data.pl ) > tmp.icase-data
+$mksary -q -l tmp.icase-data
+
+grep  -i foobar tmp.icase-data > tmp.grep
+$sary -i foobar tmp.icase-data > tmp.sary
+cmp tmp.grep tmp.sary || exit 1
+
+grep  -i foobaz tmp.icase-data > tmp.grep
+$sary -i foobaz tmp.icase-data > tmp.sary
+cmp tmp.grep tmp.sary || exit 1
+
+
+#
+# Exhaustive test.
+#
+( echo 'foo' | perl gen-icase-data.pl;
+  echo 'bar' | perl gen-icase-data.pl ) > tmp.icase-data
+$mksary -q -l tmp.icase-data
+
+for pat in `cat tmp.icase-data`; do
+    grep  -i $pat tmp.icase-data > tmp.grep
+    $sary -i $pat tmp.icase-data > tmp.sary
+    cmp tmp.grep tmp.sary || exit 1
+done
+
+exit 0

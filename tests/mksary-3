@@ -1,0 +1,16 @@
+#! /bin/sh
+# test for mksary -w
+
+mksary=../src/mksary
+
+cp ../COPYING tmp.COPYING
+
+$mksary -q -w tmp.COPYING
+mv tmp.COPYING.ary tmp.COPYING.ary-
+
+perl word-indexer.pl tmp.COPYING > tmp.COPYING.ary
+$mksary -q -s tmp.COPYING
+
+cmp tmp.COPYING.ary tmp.COPYING.ary- || exit 1
+
+exit 0

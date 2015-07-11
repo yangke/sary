@@ -1,0 +1,5 @@
+usr/bin/sary-config
+usr/lib/libsary.so
+usr/lib/libsary.la
+usr/lib/libsary.a
+usr/include/

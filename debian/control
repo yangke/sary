@@ -1,0 +1,52 @@
+Source: sary
+Section: text
+Priority: optional
+Maintainer: Masato Taruishi <taru@debian.org>
+Build-Depends: debhelper (>= 1.1.17), libglib1.2-dev
+Standards-Version: 3.1.1
+
+Package: sary
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: A suffix array library (program)
+ Sary is a suffix array library.  It provides fast full-text
+ search facilities for huge, say, 10 MB, 100 MB text files
+ using the data structure called suffix array.
+ .
+ This package contains a simple search program to use the library.
+
+Package: sary-doc
+Section: doc
+Architecture: all
+Description: A suffix array library (documentation)
+ Sary is a suffix array library.  It provides fast full-text
+ search facilities for huge, say, 10 MB, 100 MB text files
+ using the data structure called suffix array.
+ .
+ This package contains documentations for sary and the suffix
+ array algorithm.
+
+Package: libsary5
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: A suffix array library (runtime library)
+ Sary is a suffix array library.  It provides fast full-text
+ search facilities for huge, say, 10 MB, 100 MB text files
+ using the data structure called suffix array.
+ .
+ This package contains a shared library of the suffix array
+ library.
+
+Package: libsary-dev
+Section: devel
+Architecture: any
+Depends: libsary5 (= ${Source-Version})
+Suggests: sary-doc
+Description: A suffix array library (development)
+ Sary is a suffix array library.  It provides fast full-text
+ search facilities for huge, say, 10 MB, 100 MB text files
+ using the data structure called suffix array.
+ .
+ This package contains development files necesarry to development
+ program that use this library.

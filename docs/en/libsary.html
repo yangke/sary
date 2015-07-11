@@ -1,0 +1,810 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<link rev=made href="mailto:satoru@namazu.org">
+<title>libsary Reference Manual</title>
+<link rel=stylesheet href="../sary.css">
+</head>
+<body>
+<h1>libsary Reference Manual</h1>
+<p>Last Modified: 2002-10-22</p>
+<hr>
+
+<h2>Table of Contents</h2>
+<!-- AUTO-GENERATED-TOC-START -->
+<ul>
+<li><a href="#sample">Sample Programs</a>
+  <ul>
+  <li><a href="#sample-array">Construction of Suffix Array</a>
+  <li><a href="#sample-search">Search with Suffix Array</a>
+  </ul>
+<li><a href="#compile">How to Compile</a>
+<li><a href="#array">Construction of Suffix Array</a>
+<li><a href="#ipoint">Assigning Index Points</a>
+<li><a href="#search">Search with Suffix Array</a>
+<li><a href="#text">Text Processing</a>
+<li><a href="#progress">Displaying a Progress Bar</a>
+<li><a href="#appendix">Appendix: Application of Scripting Languages</a>
+</ul>
+<!-- AUTO-GENERATED-TOC-END -->
+
+
+
+
+
+<h2><a name="sample">Sample Programs</a></h2>
+
+<h3><a name="sample-array">Construction of Suffix Array</a></h3>
+
+<p>
+Construct the suffix array for the file_name with index
+points assigned to character by character in UTF-8 encoding
+and store the resulting suffix array to the file named
+file_name.ary.  Consult <a
+href="http://cvs.namazu.org/sary/src/mksary.c">mksary.c</a> for
+a detailed example.
+</p>
+
+<pre>
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;sary.h&gt;
+  
+int
+main (int argc, char **argv)
+{
+    char *file_name;
+    SaryInt ipoints;
+    gboolean status;
+    SaryBuilder *builder;
+
+    if (argc != 2) exit(2);
+    file_name = argv[1];
+
+    builder = sary_builder_new(file_name);
+    sary_builder_set_ipoint_func(builder, sary_ipoint_char_utf8);
+
+    ipoints = sary_builder_index(builder);
+    if (ipoints == -1) {
+	g_print("error: %s(.ary): %s\n", file_name, g_strerror(errno));
+	exit(2);
+    }
+
+    status = sary_builder_sort(builder);
+    if (status == FALSE) {
+	g_print("error: %s(.ary): %s\n", file_name, g_strerror(errno));
+	exit(2);
+    }
+    sary_builder_destroy(builder);
+    return 0;
+}
+</pre>
+
+<h3><a name="sample-search">Search with Suffix Array</a></h3>
+
+<p>
+Search the file_name for the pattern and sort the results in
+occurrence order and print them line by line. Suffix array
+made for file_name MUST exist. Consult <a
+href="http://cvs.namazu.org/sary/src/sary.c">sary.c</a>
+for a detailed example.
+</p>
+
+<pre>
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;sary.h&gt;
+
+int
+main (int argc, char **argv)
+{
+    SarySearcher *searcher;
+    char *pattern;
+    char *file_name;
+
+    if (argc != 3) exit(2);
+    pattern = argv[1];
+    file_name = argv[2];
+
+    searcher = sary_searcher_new(file_name);
+    if (searcher == NULL) {
+	g_print("error: %s(.ary): %s\n", file_name, g_strerror(errno));
+	exit(2);
+    }
+
+    if (sary_searcher_search(searcher, pattern)) {
+	gchar *line;
+
+	sary_searcher_sort_occurrences(searcher);
+
+	while ((line = sary_searcher_get_next_line(searcher))) {
+	    g_print("%s", line);
+	    g_free(line);
+	}
+    }
+    sary_searcher_destroy(searcher);
+    return 0;
+}
+</pre>
+
+<h2><a name="compile">How to Compile</a></h2>
+
+<p>
+Compiling program.c which uses libsary can be done as
+the following.  Use of <a
+href="http://sources.redhat.com/autoconf/">autoconf</a>, <a
+href="http://sources.redhat.com/automake/">automake</a>, and
+<a
+href="http://www.gnu.org/software/libtool/libtool.html">libtool</a>
+is recommended for the real development.
+</p>
+
+<pre>
+  % gcc program.c -o program `pkg-config sary --libs` `pkg-config sary --cflags`
+</pre>
+
+
+<h2><a name="array">Construction of Suffix Array</a></h2>
+
+<dl>
+<dt><code>
+SaryBuilder*    sary_builder_new        (const gchar *file_name)
+</code>
+<dd>
+
+Create SaryBuilder object for file_name. It is for assining
+index points and sorting a suffix array. Return the created
+object. Return NULL if faled.
+
+<dt>
+<code>
+SaryBuilder*	sary_builder_new2		(const gchar *file_name,
+						 const gchar *array_name);
+</code>
+<dd>
+
+This function is identical to sary_builder_new except the
+array_name parameter specifying the file name of the suffix
+array.
+
+<dt>
+<code>
+void		sary_builder_destroy		(SaryBuilder *builder);
+</code>
+<dd>
+Destruct SaryBuilder object.
+
+
+<dt>
+<code>
+void		sary_builder_set_ipoint_func	(SaryBuilder *builder,
+						 SaryIpointFunc ipoint_func);
+</code>
+<dd>
+
+Set the function for assigning index points. There are <a
+href="#ipoint">built-in functions for next_ipoint</a> but
+user-defined functions following SaryIpointFunc API can be
+used.
+
+<dt>
+<code>
+SaryInt		sary_builder_index		(SaryBuilder *builder);
+</code>
+<dd>
+
+Assign index points. Return the number of index points
+assigned. Return -1 if failed.
+
+<dt>
+<code>
+gboolean	sary_builder_sort		(SaryBuilder *builder);
+</code>
+<dd>
+
+Sort a suffix array. Return TRUE if success. Return FALSE if
+failed.
+
+<dt>
+<code>
+gboolean	sary_builder_block_sort		(SaryBuilder *builder);
+</code>
+<dd>
+
+Sort a suffix array by memory-saving block sorting. Return
+TRUE if success. Return FALSE if failed.
+
+<dt>
+<code>
+void		sary_builder_set_block_size	(SaryBuilder *builder,
+						 SaryInt block_size);
+</code>
+<dd>
+
+Set the block size for sary_builder_block_sort.
+
+<dt>
+<code>
+void		sary_builder_set_nthreads	(SaryBuilder *builder,
+						 SaryInt nthreads);
+</code>
+<dd>
+
+Set the number of threads for doing sary_builder_block_sort.
+Performance will improve if your machine has two or more CPUs.
+
+<dt>
+<code>
+void		sary_builder_connect_progress	(SaryBuilder *builder,
+						 SaryProgressFunc 
+						 	progress_func,
+						 gpointer progress_func_data);
+</code>
+<dd>
+
+Connect a function and data for displaying a progress bar to
+SaryBuilder object.
+
+</dl>
+
+
+<h2><a name="ipoint">Assigning Index Points</a></h2>
+
+<dl>
+<dt>
+<code>
+gchar*          sary_ipoint_char_ascii  (SaryText *text);
+</code>
+<dd>
+
+Assign index points character by character in ASCII encoding
+(1 octet). Return the pointer of the assigned index
+point. Return NULL if the end of file reached.
+
+<dt>
+<code>
+gchar*          sary_ipoint_char_eucjp  (SaryText *text);
+</code>
+<dd>
+
+Assign index points character by character in EUC-JP
+encoding. Return the pointer of the assigned index
+point. Return NULL if the end of file reached.
+
+
+<dt>
+<code>
+gchar*          sary_ipoint_char_sjis   (SaryText *text);
+</code>
+<dd>
+
+Assign index points character by character in Shift_JIS
+encoding. Return the pointer of the assigned index
+point. Return NULL if the end of file reached.
+
+
+<dt>
+<code>
+gchar*          sary_ipoint_char_utf8   (SaryText *text);
+</code>
+<dd>
+
+Assign index points character by character in UTF-8
+encoding. Return the pointer of the assigned index
+point. Return NULL if the end of file reached.
+
+<dt>
+<code>
+gchar*          sary_ipoint_line        (SaryText *text);
+</code>
+<dd>
+
+Assign index points line by line. Return the pointer of the
+assigned index point. Return NULL if the end of file
+reached.
+
+<dt>
+<code>
+gchar*          sary_ipoint_word        (SaryText *text);
+</code>
+<dd>
+
+Assign index points word by word. The word is a string
+delimited by whitespaces.  Return the pointer of the
+assigned index point. Return NULL if the end of file
+reached.
+
+</dl>
+
+<h2><a name="search">Search with Suffix Array</a></h2>
+
+<p>
+NOTE: sary_searcher_search2, sary_searcher_get_next_line2,
+sary_searcher_get_next_context_lines2, and
+sary_searcher_get_next_tagged_region2 are especially prepared for
+ones who want to write bindings for scripting languages or
+performance enthusiasts. Since each string in these
+functions is handled with its length, the string can contain
+'\0' in it.  No strings are newly created.
+</p>
+
+<dl>
+<dt>
+<code>
+SarySearcher*           sary_searcher_new                            (const gchar 
+                                                         *file_name);
+</code>
+<dd>
+
+Create SarySearcher object for file_name. It handles search and
+its results. SarySearcher stands for Suffix Array Searcher. Return
+the created object. Return NULL if faled.
+
+
+<dt>
+<code>
+SarySearcher*           sary_searcher_new2               (const gchar *file_name,
+                                             const gchar *array_name)
+</code>
+<dd>
+
+This function is identical to sary_array_sort except the
+array_name parameter specifying the file name of the suffix
+array.
+
+<dt>
+<code>
+void            sary_searcher_destroy                          (SarySearcher *searcher);
+</code>
+<dd>
+
+Destruct SarySearcher object.
+
+<dt>
+<code>
+void            sary_searcher_enable_cache                    (SarySearcher *searcher);
+</code>
+<dd>
+
+Enable the cache engine.  Cache the search results and reuse
+them for the same pattern later.
+
+
+<dt>
+<code>
+gboolean        sary_searcher_search                           (SarySearcher *searcher, 
+                                                         const gchar *pattern);
+</code>
+<dd>
+
+Search for the pattern.  Return TRUE if success. Return
+FALSE if failed.
+
+<dt>
+<code>
+gboolean        sary_searcher_search2                  (SarySearcher *searcher, 
+                                                 const gchar *pattern,
+						 SaryInt len);
+</code>
+<dd>
+Search for the pattern whose length is specified with len.
+Return TRUE if success. Return FALSE if failed.
+
+<dt>
+<code>
+gboolean        sary_searcher_isearch                  (SarySearcher *searcher, 
+                                                 const gchar *pattern,
+						 SaryInt len);
+</code>
+<dd>
+
+Similar to sary_searcher_search2 but this function does efficient
+incremental searchs.  Each search is performed for the range
+of the previous search results (the first time is identical
+to sary_searcher_search2).  Call the function continuously with the
+same pattern and increase len incrementally to the length of
+the pattern to do incremental searchs.
+sary_searcher_sort_occurrences MUST not be used together.  Return
+TRUE if success. Return FALSE if failed.
+
+<dt>
+<code>
+gboolean        sary_searcher_isearch_reset            (SarySearcher *searcher)
+</code>
+<dd>
+
+Reset internal states stored for sary_searcher_isearch.  To use
+sary_searcher_isearch with another pattern again, you should call
+this function beforehand.
+
+<dt>
+<code>
+gboolean        sary_searcher_icase_search                     (SarySearcher *searcher, 
+                                                         const gchar *pattern);
+</code>
+<dd>
+
+Do case-insensitive search for the pattern.  Return TRUE if
+success. Return FALSE if failed.
+
+<dt>
+<code>
+gboolean        sary_searcher_icase_search2            (SarySearcher *searcher, 
+                                                 const gchar *pattern,
+						 SaryInt len);
+</code>
+<dd>
+Do case-insensitive search for the pattern whose length is
+specified with len.  Return TRUE if success. Return FALSE if
+failed.
+
+<dt>
+<code>
+SaryText*       sary_searcher_get_text                         (SarySearcher *searcher);
+</code>
+<dd>
+
+Return the SaryText object of the searcher.
+
+<dt>
+<code>
+SaryMmap*       sary_searcher_get_array                        (SarySearcher *searcher);
+</code>
+<dd>
+
+Return the Mmaped suffix array of the searcher.
+
+<dt>
+<code>
+gchar*          sary_searcher_get_next_line                    (SarySearcher *searcher);
+</code>
+<dd>
+
+Get the next search result line by line as newly created
+string.  The all results can be retrieved by calling the
+functions continuously.  Return NULL if no more results. The
+returned value MUST be `g_free'ed by caller.
+
+<dt>
+<code>
+gchar*		sary_searcher_get_next_line2		(SarySearcher *searcher, 
+						 SaryInt *len);
+</code>
+<dd>
+
+Get the next search result line by line as a pointer.  Store
+the length of the string into len. The all results can be
+retrieved by calling the functions continuously.  Return
+NULL if no more results. 
+
+<dt>
+<code>
+gchar*          sary_searcher_get_next_context_lines           (SarySearcher *searcher, 
+                                                         gint backward, 
+                                                         gint forward);
+</code>
+<dd>
+
+Get the next search result as context lines as newly created
+string.  The string includes the line feed character '\n' at
+the end. The all results can be retrieved by calling the
+functions continuously.  Return NULL if no more results. The
+returned value MUST be `g_free'ed by caller.
+
+
+<dt>
+<code>
+gchar*		sary_searcher_get_next_context_lines2	(SarySearcher *searcher, 
+						 SaryInt backward, 
+						 SaryInt forward,
+						 SaryInt *len);
+</code>
+<dd>
+
+Get the next search result as context lines as a
+pointer. Store the length of the string into len. The string
+includes the line feed character '\n' at the end. The all
+results can be retrieved by calling the functions
+continuously.  Return NULL if no more results.
+
+<dt>
+<code>
+gchar*		sary_searcher_get_next_tagged_region	(SarySearcher *searcher, 
+						 const gchar *start_tag,
+						 const gchar *end_tag);
+</code>
+<dd>
+
+Get the next search result as tagged regions between
+start_tad and end_tag (including start_tag and end_tag) as
+newly created string.  The all results can be retrieved by
+calling the functions continuously.  Return NULL if no more
+results. The returned value MUST be `g_free'ed by caller.
+
+<dt>
+<code>
+gchar*		sary_searcher_get_next_tagged_region2	(SarySearcher *searcher,
+						 const gchar *start_tag,
+						 SaryInt start_tag_len,
+						 const gchar *end_tag,
+						 SaryInt end_tag_len,
+						 SaryInt *len);
+</code>
+
+Get the next search result as tagged regions between
+start_tad and end_tag (including start_tag and end_tag) as a
+pointer. Store the length of the string into len. The all
+results can be retrieved by calling the functions
+continuously.  Return NULL if no more results.
+
+<dt>
+<code>
+SaryText*       sary_searcher_get_next_occurrence              (SarySearcher *searcher);
+</code>
+<dd>
+
+Get the next search result as SaryText object.  The function
+is useful for low-level text processing.  The all results
+can be retrieved by calling the functions continuously.
+Return NULL if no more results.
+
+<dt>
+<code>
+SaryInt        sary_searcher_get_next_position                 (SarySearcher *searcher);
+</code>
+<dd>
+
+Get the next search result as SaryInt.  The all results
+can be retrieved by calling the functions continuously.
+Return -1 if no more results.
+
+<dt>
+<code>
+SaryInt         sary_searcher_count_occurrences                (SarySearcher *searcher);
+</code>
+<dd>
+
+Return the number of hits of the search.
+
+<dt>
+<code>
+void            sary_searcher_sort_occurrences                 (SarySearcher *searcher);
+</code>
+<dd>
+
+Sort the occurrences (search results) in occurrence order.
+
+</dl>
+
+<h2><a name="text">Text Processing</a></h2>
+
+<p>
+SaryText object is used for text processing. The object has
+the state called cursor. Operations for the object are
+performed with the cursor state.
+</p>
+
+<dl>
+<dt>
+<code>
+SaryText*       sary_text_new                   (const gchar *file_name);
+</code>
+<dd>
+
+Create SaryText object for the file_name. Return the created
+object. Return NULL if failed.
+
+<dt>
+<code>
+void            sary_text_destroy               (SaryText *text);
+</code>
+<dd>
+
+Destruct SaryText object.
+
+<dt>
+<code>
+SaryInt         sary_text_get_lineno            (SaryText *text);
+</code>
+<dd>
+
+Return the line number of the cursor position. (No useful
+for libsary)
+
+<dt>
+<code>
+void            sary_text_set_lineno            (SaryText *text, 
+                                                 SaryInt lineno);
+</code>
+<dd>
+
+Set the line number of the cursor position. (No useful for
+libsary)
+
+<dt>
+<code>
+SaryInt         sary_text_get_linelen           (SaryText *text);
+</code>
+<dd>
+
+Return the line length of the cursor position. The length
+includes the line feed character '\n'.  Return 0 if the
+cursor is on the end of file.
+
+
+
+<dt>
+<code>
+gchar*          sary_text_get_line              (SaryText *text);
+</code>
+<dd>
+
+Return the newly creatd string of the line of the cursor
+position. The string includes the line feed character
+'\n'. Return NULL if cursor is on the end of file. The
+returned value MUST be `g_free'ed by caller.
+
+<dt>
+<code>
+gchar*          sary_text_get_region            (SaryText *cursor, 
+                                                 SaryInt len);
+</code>
+<dd>
+
+Return the newly creatd string of the region starting at the
+the cursor position through len. The returned value MUST be
+`g_free'ed  by caller.
+
+<dt>
+<code>
+gboolean        sary_text_is_eof                (SaryText *text);
+</code>
+<dd>
+
+Return TRUE if the cursor is on the end of file.  Return
+FALSE otherwise.
+
+<dt>
+<code>
+gchar*          sary_text_get_cursor            (SaryText *text);
+</code>
+<dd>
+
+Return the cursor position.
+
+
+<dt>
+<code>
+void            sary_text_set_cursor            (SaryText *text, 
+                                                 gchar *cursor);
+</code>
+<dd>
+
+Set the cursor position.
+
+<dt>
+<code>
+gchar*          sary_text_get_bof               (SaryText *text);
+</code>
+<dd>
+
+Return the beginning of file.
+
+<dt>
+<code>
+gchar*          sary_text_get_eof               (SaryText *text);
+</code>
+<dd>
+
+Return the end of file.
+
+<dt>
+<code>
+gchar*          sary_text_goto_next_line        (SaryText *text);
+</code>
+<dd>
+
+Forward the cursor position to the next line. Return the
+moved cursor position.
+
+<dt>
+<code>
+gchar*          sary_text_goto_next_word        (SaryText *text);
+</code>
+<dd>
+
+Forward the cursor position to the next word. The word is a
+string delimited by whitespaces.  Return the moved cursor
+position.
+
+<dt>
+<code>
+gchar*          sary_text_goto_bol              (SaryText *text);
+</code>
+<dd>
+
+Forward the cursor position to the beginning of line. Return
+the moved cursor position.
+
+
+<dt>
+<code>
+gchar*          sary_text_goto_eol              (SaryText *text);
+</code>
+<dd>
+
+Forward the cursor position to the end of line. Return the
+moved cursor position.
+
+<dt>
+<code>
+gchar*          sary_text_forward_cursor        (SaryText *text, 
+                                                 SaryInt step);
+</code>
+<dd>
+
+Forward the cursor position step bytes.  Return the moved
+cursor position.
+
+<dt>
+<code>
+gchar*          sary_text_backward_cursor       (SaryText *text, 
+                                                 SaryInt step);
+</code>
+<dd>
+
+Back the cursor position step bytes.  Return the moved
+cursor position.
+
+</dl>
+
+<h2><a name="progress">Displaying a Progress Bar</a></h2>
+
+<p>
+Please consult progress_bar function in
+<a
+href="http://cvs.namazu.org/sary/src/mksary.c">mksary.c</a>
+</p>
+
+
+<h2><a name="appendix">Appendix: Application of Scripting Languages</a></h2>
+
+<p>
+Assigning of index points can be performed easily with
+scripting languages such as Perl.  Application of the
+languages help if advanced text processing is needed. The
+following example shows the way to assign index points line
+by line.
+</p>
+
+<pre>
+  % cat line-indexer.pl
+  $offset = 0;
+  while (&lt;&gt;) {
+      print pack 'N', $offset;
+      $offset += length;
+  }
+
+  % perl line-indexer.pl foobar.txt &gt; foobar.txt.ary
+</pre>
+
+<p>
+Then, sort the resulting ary file to construct the suffix
+array. This work can be done with  mkary -s command.
+</p>
+
+<pre>
+  % mksary -s foobar.txt
+</pre>
+
+
+<hr>
+<p>
+$Id: libsary.html,v 1.1.1.1 2004/06/11 18:57:27 satoru-t Exp $
+</p>
+<address>
+satoru@namazu.org
+</address>
+</body>
+</html>

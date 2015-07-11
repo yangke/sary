@@ -1,0 +1,20 @@
+#! /bin/sh
+# test for mksary -i
+
+mksary=../src/mksary
+
+cp ../COPYING tmp.COPYING
+
+perl byte-indexer.pl tmp.COPYING > tmp.perl.byte
+perl line-indexer.pl tmp.COPYING > tmp.perl.line
+perl word-indexer.pl tmp.COPYING > tmp.perl.word
+
+$mksary -q -i    -a tmp.mksary.byte tmp.COPYING
+$mksary -q -i -l -a tmp.mksary.line tmp.COPYING
+$mksary -q -i -w -a tmp.mksary.word tmp.COPYING
+
+cmp tmp.perl.byte tmp.mksary.byte || exit 1
+cmp tmp.perl.line tmp.mksary.line || exit 1
+cmp tmp.perl.word tmp.mksary.word || exit 1
+
+exit 0

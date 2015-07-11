@@ -1,0 +1,4 @@
+* Remove glib dependency.
+* Remove gthread dependency.
+* Implement limited approximate searchs.
+* Implement limited regular expression searchs.

@@ -1,0 +1,23 @@
+#! /bin/sh
+
+isearch=../src/isearch-test
+mksary=../src/mksary
+
+cp words.txt tmp.words.txt
+$mksary -q -l tmp.words.txt
+
+first=`head -1 tmp.words.txt`
+last=`tail -1  tmp.words.txt`
+for pat in $first $last `perl sample.pl -10 tmp.words.txt` "Nonexistent"
+do
+    cat /dev/null > tmp.grep
+    for substr in `echo $pat | perl -nle 'print $foo .= $& while s/.//'`
+    do 
+        grep "^$substr" tmp.words.txt >> tmp.grep
+    done
+
+    $isearch $pat tmp.words.txt > tmp.isearch
+    cmp tmp.grep tmp.isearch || exit 1
+done
+
+exit 0

@@ -1,0 +1,28 @@
+#! /bin/sh
+
+#
+# Test for case-insensitive search for iso-8859-1
+#
+
+sary=../src/sary
+mksary=../src/mksary
+
+cp iso-8859-1.txt tmp.iso-8859-1.txt
+
+$mksary -q -l tmp.iso-8859-1.txt
+
+LC_ALL=""
+LC_CTYPE="" 
+LANG=""
+unset LC_ALL  
+unset LC_CTYPE
+unset LANG    
+
+for pat in `perl -pe '<>' iso-8859-1.txt`; do # retrieve odd lines.
+    perl -ne 'if (/^'"$pat"'$/) {print; $_ = <>; print}' \
+    	  iso-8859-1.txt > tmp.perl
+    LANG=fr_CH $sary -i "$pat" tmp.iso-8859-1.txt > tmp.sary
+    cmp tmp.perl tmp.sary || exit 1
+done
+
+exit 0

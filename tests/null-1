@@ -1,0 +1,42 @@
+#! /bin/sh
+
+#
+# Test for handling a file containing null characters.
+#
+
+mksary=../src/mksary
+sary=../src/sary
+
+cp null.txt tmp.null.txt
+
+#
+# Can handle lines containing null characters?
+#
+
+$mksary -q -l tmp.null.txt
+mv tmp.null.txt.ary tmp.null.txt.ary-
+
+perl line-indexer.pl tmp.null.txt > tmp.null.txt.ary
+$mksary -q -s tmp.null.txt
+
+cmp tmp.null.txt.ary tmp.null.txt.ary- || exit 1
+
+
+#
+# Exhaustive test.
+#
+
+$mksary -q tmp.null.txt
+perl -pe 's/\x00/ /g' tmp.null.txt > tmp.space.txt # for grep
+
+for pat in `perl sample.pl -10 words.txt` ""
+do
+    grep      "$pat" tmp.space.txt | perl -pe 's/ /\x00/g' > tmp.grep1
+    grep  -C2  "$pat" tmp.space.txt | perl -pe 's/ /\x00/g' > tmp.grep2
+    $sary     "$pat" tmp.null.txt                          > tmp.sary1
+    $sary -C  "$pat" tmp.null.txt                          > tmp.sary2
+    cmp tmp.grep1 tmp.sary1 || exit 1
+    cmp tmp.grep2 tmp.sary2 || exit 1
+done
+
+exit 0

@@ -1,0 +1,25 @@
+#! /bin/sh
+
+#
+# Test for the null string.
+# Reproductivity test.
+#
+
+sary=../src/sary
+mksary=../src/mksary
+
+# Must produce the same contents.
+for file in COPYING; do
+    cat -n ../$file > tmp.$file
+    $mksary -q  tmp.$file
+    $sary     "" tmp.$file > tmp.$file.sary1
+    $sary -i  "" tmp.$file > tmp.$file.sary2
+    $sary -C  "" tmp.$file > tmp.$file.sary3
+    $sary -iC "" tmp.$file > tmp.$file.sary4
+    cmp tmp.$file       tmp.$file.sary1 || exit 1
+    cmp tmp.$file.sary1 tmp.$file.sary2 || exit 1
+    cmp tmp.$file.sary2 tmp.$file.sary3 || exit 1
+    cmp tmp.$file.sary3 tmp.$file.sary4 || exit 1
+done
+
+exit 0

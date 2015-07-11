@@ -1,0 +1,40 @@
+sary (1.0.4) unstable; urgency=low
+
+  * new upstream release.
+
+ -- TSUCHIYA Masatoshi <tsuchiya@namazu.org>  Wed, 26 Dec 2001 23:17:48 +0900
+
+sary (1.0.3) unstable; urgency=low
+
+  * new upstream release.
+
+ -- Masato Taruishi <taru@debian.org>  Thu, 14 Dec 2000 15:07:12 +0900
+
+sary (1.0.0cvs20001127.1) unstable; urgency=low
+
+  * now native package.
+
+ -- Masato Taruishi <taru@debian.org>  Mon, 27 Nov 2000 06:19:16 +0900
+
+sary (1.0.0-0.2) unstable; urgency=low
+
+  * Wrote Description.
+
+ -- Masato Taruishi <taru@debian.org>  Mon, 27 Nov 2000 05:07:33 +0900
+
+sary (1.0.0-0.1) unstable; urgency=low
+
+  * new upstream release.
+
+ -- Masato Taruishi <taru@debian.org>  Mon, 27 Nov 2000 03:10:09 +0900
+
+sary (0.1.5-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Masato Taruishi <taru@debian.org>  Sun, 26 Nov 2000 00:29:09 +0900
+
+Local variables:
+mode: debian-changelog
+add-log-mailing-address "taru@debian.org"
+End:

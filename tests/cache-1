@@ -1,0 +1,10 @@
+#! /bin/sh
+
+mksary=../src/mksary
+cache=../src/cache-test
+
+cp words.txt tmp.words.txt
+$mksary -q -l tmp.words.txt
+
+$cache tmp.words.txt
+exit 0

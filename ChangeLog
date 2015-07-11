@@ -1,0 +1,1320 @@
+2005-03-29  NOKUBI Takatsugu  <knok @ daionet.gr.jp>
+
+	* configure.in: Bumped version 1.2.0.
+
+2005-01-28  NOKUBI Takatsugu  <knok @ daionet.gr.jp>
+
+	* sary/builder.c (sary_builder_sort): Add result value checking.
+
+2004-08-02  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* ChangeLog: Obfuscate email addresses to prevent spams.
+
+2004-01-01  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* src/mksary.c (show_help): Fix usage messages.
+
+	* src/sary.c (show_help): Fix usage messages.
+
+2003-10-30  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* src/sary.c (print_highlight_internal): New function.
+	(print_highlight): New function.
+	(print_highlight_icase): New function.
+	(print_normal): New function.
+	(grep_normal): Use print_* functions to print the results.
+	(parse_options): New option: --highlight.
+
+2002-10-29  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* sary/searcher.c (sary_searcher_multi_search): Use GArray instead
+	of a self-managing stretching array.
+
+2002-10-28  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* tests/Makefile.am (TESTS): New test: multi-1.
+
+	* tests/multi-1 (multi): New file.
+
+	* src/multi-test.c (fgrep): New file.
+
+	* sary/searcher.c (sary_searcher_multi_search): New function.
+	(qsortscmp): New function.
+	(patterns_new): New function.
+	(patterns_destroy): New function.
+	(patterns_sort): New function.
+	(has_prev_as_prefix): New function.
+
+2002-10-22  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* Makefile.am (m4datadir): Abolished.
+	(m4data_DATA): Ditto.
+
+	* configure.in: Don't generate sary-config any longer.
+
+	* tests/Makefile.am: Add cat-2
+
+	* tests/cat-2: New file.
+
+	* src/Makefile.am: Modifed to make cat-test2
+
+	* src/cat-test2.c: New file.
+
+	* sary-config.in: Removed.
+
+	* sary.m4: Removed.
+
+2002-10-21  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* docs/en/libsary.html: Update documentation.
+
+	* docs/ja/libsary.html: Update documentation.
+
+	* src/sary.c: Use SarySearcher in stead of Saryer.
+
+	* src/cache-test.c: Use SarySearcher in stead of Saryer.
+
+	* src/cat-test.c: Use SarySearcher in stead of Saryer.
+
+	* src/isearch-test.c: Use SarySearcher in stead of Saryer.
+
+	* src/repated-test.c: Use SarySearcher in stead of Saryer.
+
+	* src/search-benchmark.c: Use SarySearcher in stead of Saryer.
+
+	* sary/searcher.h: New file converted from saryer.h.
+
+	* sary/searcher.c: New file converted from saryer.c.
+
+	* sary/saryer.c: Removed.
+
+	* sary/saryer.h: Removed.
+
+	* sary.h: #include <sary/searcher.h> instead of <sary/saryer.h>
+
+	* tests/sary-3: grep -C 2 => grep -C2.
+
+	* tests/null-1: grep -C 2 => grep -C2.
+
+	* configure.in: Bumped version number to 1.1.0.
+	Set LTVERSION to 9:0:0.
+	(LTVERSION): Change the year of copyright: 2000-2001.
+
+	* configure.in: Require 2.0.0 or later.
+	- by applying a patch by Ryuji Abe.
+
+	* sary/saryer.c (saryer_get_next_position): New function.
+	(saryer_peek_next_position): Abolished.
+	(peek_next_occurrence): New function.
+
+2002-10-17  Ryuji Abe  <rug @ namazu.org>
+
+	* tests/sary-3: Adapted to GNU grep 2.5. (the -C or --context
+	option requires an argument.)
+
+	* tests/null-1: Likewise.
+
+2002-09-18  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* Sary 1.0.4 Released!
+
+	* src/sary.c (grep_normal): Fix separator bugs.
+
+	* docs/sary.css: Add @import url(http://namazu.org/~satoru/satoru.css);
+
+2002-08-23  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* sary/builder.c (progress_quiet): New function.
+	(sary_builder_new2): Use progress_quiet for builder->progress_func.
+
+2002-08-22  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* src/mksary.c (show_help): Modify the usage message.
+
+	* src/sary.c (show_help): Modify the usage message.
+
+	* sary/str.c (sary_str_seek_eol): No longer call
+	sary_str_seek_backward, sary_str_seek_backward. Do it itself for
+	performance.
+	(sary_str_seek_bol): Ditto.
+
+	* src/sary.c (grep_normal): Call g_print only if separator or
+	separator2 is not NULL.
+
+2002-01-04  Ryuji Abe  <rug @ namazu.org>
+
+	* configure.in: Revert to use AM_PROG_LIBTOOL. (workaround
+	for earlier version of automake.)
+
+2001-12-27  TSUCHIYA Masatoshi  <tsuchiya @ namazu.org>
+
+	* debian/libsary5.files, debian/changelog: Follow the change of
+	the version number.
+
+2001-12-26  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* sary/mmap.c (sary_mmap): Pass FILE_SHARE_READ to the 3rd
+	argument of CreateFile for file sharing.
+	- Suggested by Taku Kudoh <taku-ku @ is.aist-nara.ac.jp>
+
+2001-12-24  Satoru Takabayashi  <satoru @ namazu.org>
+
+	* tests/sary-6 (mksary): Add a new test using ../src/repeated-test
+
+	* tests/Makefile.am (TEST_CASES): Add repeated.txt
+
+	* tests/repeated.txt: New file.
+
+	* configure.in: Bumped version number to 1.0.4.
+	Set SARY_MICRO_VERSION to 4.
+	Set LTVERSION to 8:1:3.
+	(LTVERSION): Change the year of copyright: 2000-2001.
+
+	* src/Makefile.am (noinst_PROGRAMS): Add repeated-test
+	(repeated_test_SOURCES): New variable.
+
+	* src/repeated-test.c: New file.
+
+	* sary/saryer.c (join_subsequent_region): Change a boundary
+	condition. Thanks to TSUCHIYA Masatoshi 
+	<tsuchiya @ pine.kuee.kyoto-u.ac.jp> for the bug report. 
+	[sary-ja:00020]
+
+	* src/mksary.c (short_options): Add `h'.
+
+2001-12-24  Ryuji Abe  <rug @ namazu.org>
+
+	* sary.pc.in (Requires): Removed.
+	(Libs): Added @GLIB_LIBS @ .
+	(Cflags): Added @GLIB_CFLAGS @ .
+
+2001-12-19  Ryuji Abe  <rug @ namazu.org>
+
+	* maintMakefile (GTAGS): Comment out by default because GTAGS
+	support is already included in automake 1.5.
+	
+2001-08-08  Ryuji Abe  <rug @ namazu.org>
+
+	* configure.in: Fixed macro order to find correct cpp.
+	(AC_PROG_LIBTOOL): Use instead of AM_PROG_LIBTOOL.
+
+2001-06-06  Ryuji Abe  <rug @ namazu.org>
+
+	* sary.pc.in: Added pkg-config input files.
+
+	* Makefile.am (pkgconfigdir): New variable for handling
+	pkg-config input files.
+	(pkgconfig_DATA): Likewise.
+	(EXTRA_DIST): Added sary.pc.in.
+
+	* configure.in (AC_OUTPUT): Added sary.pc.
+
+2001-06-06  Ryuji Abe  <rug @ namazu.org>
+
+	[All include file filled 'extern "C"' magics.]
+
+	* sary/array.h: Fixed includes.
+
+	* sary/bsearch.h: Likewise.
+
+	* sary/builder.h: Likewise.
+
+	* sary/cache.h: Likewise.
+
+	* sary/i.h: Likewise.
+
+	* sary/merger.h: Likewise.
+
+	* sary/mmap.c: Likewise.
+
+	* sary/mmap.h: Likewise.
+
+	* sary/progress.h: Likewise.
+
+	* sary/saryer.h: Likewise.
+
+	* sary/sorter.h: Likewise.
+
+	* sary/writer.h: Likewise.
+
+	* src/search-benchmark.c: Likewise.
+	
+2001-01-25  Masato Taruishi <taru @ debian.org>
+
+        * debian/libsary5.files: update the shared library file name
+        to libsary.so.5.3.0.
+
+2001-01-24  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* src/mksary.c (show_help): Fix a typo in help messages.
+
+2000-12-26  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary/progress.c (sary_progress_connect): Connect progress
+	function iff func != NULL.
+
+2000-12-14  Ryuji Abe  <rug @ namazu.org>
+
+	* README: Fixed location of Sary web page.
+
+	* sary/builder.c: Added gtk-doc style comments.
+
+	* sary/ipoint.c: Likewise.
+
+	* sary/saryer.c: Likewise.
+
+	* sary/text.c: Likewise.
+
+2000-12-12  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* Sary 1.0.3 Released!
+
+	* src/mksary.c: Change the default block size to 4MB.
+
+	* sary/Makefile.am (pkginclude_HEADERS): Add sorter.h and writer.h
+	(pkginclude_HEADERS): Add merger.h and mkqsort.h progress.h
+
+	* tests/Makefile.am (benchmark-mksary): Pass -q to mksary.
+	(benchmark-search): Likewise.
+
+	* src/Makefile.am (mleak-check): New rule.
+
+	* sary/sorter.c (new_blocks): Renamed from create_blocks.
+
+	* src/mksary.c (parse_options): Add -t and -b checking.
+
+	* sary/writer.c (sary_writer_destroy): Be void. Add an assertion.
+
+2000-12-11  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary-config.in: Add gthread for glib-config.
+
+	* configure.in: Bumped version number to 1.0.3.
+	(GLIB_CFLAGS): Add gthread.
+	(GLIB_LIBS): Likewise.
+
+	* configure.in (LTVERSION): Set to 8:0:3. (interface added)
+
+	* sary/mkqsort.c (insertion_sort): Modify an assertion.
+
+	* sary/merger.c (sary_merger_merge):  Use SaryWriter.
+
+	* sary/builder.c (index): Use SaryWriter.
+
+	* sary/Makefile.am (libsary_la_LDFLAGS): Add -export-dynamic.
+
+	* sary.h: #include <sary/writer.h>
+
+	* sary/Makefile.am (libsary_la_SOURCES): Add writer.c and writer.h
+
+	* sary/writer.h: New file.
+
+	* sary/writer.c: New file.
+
+	* sary/builder.c (index): New function.
+
+2000-12-10  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary/builder.c (sary_builder_sort): Use SarySorter.
+
+	* sary/builder.c (sary_builder_block_sort): Use SarySorter.
+
+	* sary/builder.c (sary_builder_set_nthreads): New function. (API)
+
+	* sary/mkqsort.c (sary_multikey_qsort): Add a parameter.
+
+	* sary.h: #include <sary/sorter.h>
+
+	* sary/Makefile.am (libsary_la_SOURCES): Add sorter.c and sorter.h
+
+	* sary/sorter.h: New file.
+
+	* sary/sorter.c: New file.
+
+2000-12-09  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* tests/Makefile.am (TESTS): Add mksary-5.
+
+	* tests/mksary-5 (mksary): New file.
+
+	* tests/mksary-3 (mksary): Simplified.
+
+	* tests/Makefile.am (TEST_TOOLS): Add byte-indexer.pl.
+
+	* tests/byte-indexer.pl: New file.
+
+	* src/mksary.c (parse_options): New option: --index, -i.
+
+2000-12-08  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* src/mksary.c (parse_options): New option: --threads, -t.
+
+	* src/Makefile.am (sary_SOURCES): Simplified.
+
+	* configure.in: Remove -pedantic to avoid warnings for `inline'
+
+	* src/mksary.c (print_time): New function.
+	(print_eta): Likewise.
+	(print_elapsed): Likewise.
+
+2000-12-07  Ryuji Abe  <rug @ namazu.org>
+
+	* sary.def: Removed.
+
+	* config.h.win32: Removed temporary.
+
+	* configure.in: Add more gcc flags.
+
+2000-12-07  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary/merger.c (is_block_exhausted): New function.
+
+2000-12-06  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary/ipoint.c (sary_ipoint_locale): Add error handling for mblen.
+
+2000-12-06  Masato Taruishi  <taru @ debian.org>
+
+        * debian/*: merge debian-branch
+
+        * Makefile.am, configure.in: add debian SUBDIR
+
+2000-12-06  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* Sary 1.0.2 Released!
+
+	* sary/merger.c (update_block_cache): New function.
+	(queue_rearrange): Likewise.
+	(queue_downsize): Likewise.
+	(queue_minimum): Likewise.
+	(queue_insert): Likewise.
+
+	* sary/builder.c (calc_nblocks): New function.
+
+2000-12-05  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary/builder.c (sort_block): Add condition for remains.
+
+	* tests/sary-4 (mksary): Add test for mksary -b option.
+
+	* tests/Makefile.am (TESTS): Add mksary-4.
+
+	* tests/mksary-4 (mksary): New file.
+
+	* src/sary.c (sort_lexicographical): New function.
+
+	* src/mksary.c (ck_atoi): New function.
+	Include #include <ctype.h>.
+
+	* sary/merger.c (suffixcmp): Refined.
+
+	* src/mksary.c (show_help): Use block_size.
+
+	* TODO: Block sorting and merging are implemented but the code are
+	rather dirty.  I'll clean them later. Also test suites should be
+	prepaerd.
+
+	* src/mksary.c (parse_options): New option: -b, --block
+
+	* sary/builder.c (sort_block): New function.
+	(sort_all): New function.
+	(sort): New function.
+
+	* tests/sary-4: Check exit codes for detecting abnormal termination.
+
+	* sary/Makefile.am (libsary_la_SOURCES): Add merger.c merger.h
+
+	* sary.h: Add #include <sary/merger.h>
+
+	* sary/merger.h: New file.
+
+	* sary/merger.c: New file.
+
+	* sary/builder.c (sort_all): New function.
+	(sort_block): Likewise.
+	(sort): Likewise.
+
+	* src/sary.c (parse_options): Use g_printerr.
+
+2000-12-04  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* src/mksary.c (new_builder): Refine an errror message.
+	(index): Likewise.
+	(sort): Likewise.
+
+	* src/sary.c (grep): Refine an errror message.
+
+	* src/mksary.c (index): Use g_printerr instead of g_print.
+	(sort): Likewise.
+	(new_builder): Likewise.
+
+	* vs-sufary/vs-sufary.c (sary): Likewise.
+	(sufary): Likewise.
+
+	* src/search-benchmark.c (new): Likewise
+
+	* src/sary.c (grep): Likewise.
+
+	* src/isearch-test.c (isearch): Likewise.
+
+	* src/cache-test.c (new): Likewise.
+
+	* sary/builder.c (sary_builder_index): Fix progress bug.
+	(sary_builder_index): Add error handing using ferror(3).
+
+	* src/mksary.c (calc_eta): New function.
+	(progress_bar): Print ETA.
+
+	* sary/progress.h (SaryProgress): New member: start_processer_time
+
+	* sary.h: Add #include <sary/mkqsort.h>
+
+	* sary/Makefile.am (libsary_la_SOURCES): Add mkqsort.c mkqsort.h 
+
+	* sary/builder.c: Move multikey_quicksort stuffs to mkqsort.c
+
+	* sary/mkqsort.c: New file.
+
+	* sary/mkqsort.h: New file.
+
+	* sary/builder.c (sary_builder_new): Add assertion.
+	(sary_builder_new2): Likewise.
+	(sary_builder_set_ipoint_func): Likewise.
+	(insertion_sort): Fix `if' condition.
+
+	* sary/progress.c (sary_progress_connect): Add assertion.
+	(sary_progress_new): Likewise.
+
+2000-12-03  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary/progress.c (do_nothing): New function.
+
+	* sary/builder.c (progress_func_none): Removed.
+	(sary_builder_connect_progress): Renamed from
+	sary_builder_set_progress_func. 
+
+	* src/mksary.c (progress_bar): Use gdouble instead of gfloat.
+
+	* configure.in: Bumped version number to 1.0.2.
+
+	* configure.in (LTVERSION): Set to 7:0:2. (interface added)
+
+	* sary/builder.c (insertion_sort): New function.
+
+	* sary/ipoint.c: Include <sary.h>
+
+	* src/mksary.c (progress_bar): Use SaryProgress.
+
+	* sary.h: Add #include <sary/progress.h>
+
+	* sary/Makefile.am (libsary_la_SOURCES): Add progress.c and
+	progress.h.
+
+	* sary/progress.h (sary_progress_finish): New file.
+
+	* sary/progress.c (sary_progress_count): New file.
+
+	* sary/builder.c (suffixcmp): Removed.
+	(multikey_qsort): New function.
+	(ref): Likewise.
+	(vecswap): Likewise.
+
+2000-12-02  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* src/mksary.c (progress_bar_verbose): New function.
+	(progress_quiet): New function.
+	(new_builder): New function.
+	(parse_options): New option: -q, --quiet.
+	(index): Use sary_bulder_index().
+	(sort): Use sary_bulder_sort().
+
+	* sary/array.c (sary_array_index2): Use sary_bulder_*.
+	(sary_array_sort2): Likewise.
+
+	* sary/builder.h: New file.
+
+	* sary/builder.c (sary_builder_sort): New file.
+
+	* sary/text.c (sary_text_get_size): New function. (API)
+
+	* sary/Makefile.am (pkginclude_HEADERS): Add builder.h.
+	(libsary_la_SOURCES): Add builder.c and builder.h.
+
+	* sary.h: Add <sary/builder.h>
+
+	* sary/saryconfig.h.in: Renamed from saryconfig.h
+
+	* sary.h: Renamed from sary.h.in
+
+	* configure.in (AC_OUTPUT): Add sary/saryconfig.h
+
+2000-12-01  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* Sary 1.0.1 Released!
+
+	* Makefile.am (SUBDIRS): Add man.
+
+	* sary/Makefile.am (pkginclude_HEADERS): Add cache.h
+	(pkginclude_HEADERS): Add i.h
+
+	* configure.in (AC_OUTPUT): Add man/Makefile.
+
+	* man/Makefile.am: New file.
+
+	* src/mksary.c (show_version): Be LGPL.
+
+	* src/sary.c (show_version): Be LGPL.
+
+	* src/i.h: Add detailed comments.
+
+	* tests/Makefile.am (benchmark-search): Fix pathnames.
+	(benchmark-search): New macro.
+	(benchmark-mksary): Liekwise.
+
+2000-11-28  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* tests/Makefile.am (TESTS): Add array-1.
+	(TEST_CASES): Add iso-8859-1.txt.
+
+	* tests/array-1: New file.
+
+	* tests/iso-8859-1: Unset LC_ALL, LC_CTYPE, and LANG.
+
+	* sary.c (grep): Use saryer_new2.
+
+	* sary/saryer.c (saryer_new2): New function. (API)
+	(saryer_new): Use saryer_new2.
+
+	* sary/array.c (sary_array_sort): Use sary_array_sort2.
+	(sary_array_index): Use sary_array_index2.
+
+	* src/mksary.c (index): Use sary_array_index2.
+	(sort): Use sary_array_sort2.
+	(parse_options): New option: --array=ARRAY, -a
+
+	* sary/array.c (sary_array_sort2): New function. (API)
+	(sary_array_index2): New function. (API)
+
+	* src/mksary.c (parse_options): New option: --locale, -L
+
+	* sary/ipoint.c (sary_ipoint_locale): New function.
+
+	* configure.in: Bumped version number to 1.0.1.
+
+	* sary/*.h: Refine #ifndef's: __SARY_XXXX_H__
+
+	* sary/saryconfig.h: New file.
+
+	* sary/int.h: Removed.
+
+	* Restructure directories: 
+	- libsary sources: .     -> sary
+	- command sources: .     -> src
+	- test C sources:  tests -> src
+
+	* tests/Makefile.am (TESTS): Add iso-8859-1
+
+	* tests/iso-8859-1.txt: New file.
+
+	* tests/iso-8859-1: New file.
+
+	* sary.c (show_help): Add description for -h.
+
+	* configure.in (LTVERSION): Set to 6:0:1. (interface added)
+
+	* ipoint.c (sary_ipoint_char_iso8859): New function.
+	(sary_ipoint_bytestream): New function.
+	(sary_ipoint_char_ascii): Use sary_ipoint_bytestream.
+
+	* saryer.c (icase_search): Cast the argument to expand_letter to
+	guchar for iso-8859 support. Thanks to Oleg Bartunov
+	<oleg @ sai.msu.su> for the report.
+
+	* sary.c (init_locale): New function.
+
+2000-11-26  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* Sary 1.0.0 Released!
+
+	* docs/en/Makefile.am (docsdir): Add docsdir macro.
+
+	* docs/ja/Makefile.am (docsdir): Add docsdir macro.
+
+	* configure.in: Bumped version number to 1.0.0.
+
+	* saryer.c (saryer_new): Add saryer->cache  = NULL;
+
+2000-11-26  Masato Taruishi  <taru @ debian.org>
+
+	* Makefile.am: Add -I$(top_srcdir) in INCLUDES.
+
+	* tests/Makefile.am: Add -I$(top_srcdir) in INCLUDES.
+
+	* docs/en/Makefile.am: Macro htmldir: under docsdir.
+
+	* docs/ja/Makefile.am: Macro htmldir: under docsdir.
+
+	* docs/images/Makefile.am: Macro htmldir: under docsdir.
+	
+2000-11-24  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* text.h (sary_text_get_bof): New macro. (derived from the same
+	name function)
+	(sary_text_get_eof): Likewise.
+
+	* i.h (sary_i_text): New macro. (derived from the same name function)
+
+	* i.c: Removed.
+
+	* saryer.c (search): Use next_low and next_high for the
+	performance optimization.
+
+	* bsearch.c (sary_bsearch_first): Add parameters: next_low and
+	next_high.
+	(sary_bsearch_last): Add parameters: prev_low and prev_high.
+	(sary_bsearch_first): Use SaryInt instead of gint.
+	(sary_bsearch_last): Likewise.
+
+2000-11-23  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* i.c (sary_i): Integrated to sary_i_text.
+
+	* sary.h: Remove #include <config.h>
+
+	* array.c (qsortcmp): Be inline.
+	(suffixcmp): Removed and Integrated to qsortcmp.
+
+	* saryer.c (bsearchcmp): Be inline.
+	(qsortcmp): Likewise.
+	(prefixcmp): Removed and Integrated to bsearchcmp.
+
+2000-11-21  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* configure.in (LTVERSION): Set to 5:0:0. (interface changed)
+
+	* str.c (sary_str_skip_backward): Remove +1.
+
+	* text.c (sary_text_goto_next_line): Remove `skip LF'.
+
+	* sary.c (struct grep): New member `separator2'.
+	(configure): Add separator2 handling.
+	(grep_normal): Add separator2 handling.
+
+	* str.c (sary_str_seek_forward): + 1.
+
+	* saryer.c (join_subsequent_region): Don't include eof.
+
+	* str.c (sary_str_get_linelen): Include LF.
+
+	* saryer.c (join_subsequent_region): Remove LF handling.
+
+	* Makefile.am (pkginclude_HEADERS): Remove config.h.
+
+	* sary.h: Remove #include <sary/config.h>.
+
+	* saryer.h (SaryResult): Remove is_found member.
+
+	* saryer.c (cache_search): Change sary_cache_add's arguments.
+
+	* cache.c (sary_cache_add): Change interface.
+
+	* saryer.c (bsearchcmp): Change the parameter's name.
+
+	* cache.c (destroy_element): Remove g_free(elt->str).
+
+2000-11-20  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* tests/Makefile.am (TEST_TOOLS): New macro.
+
+	* tests/all-substrs.pl: New file.
+
+	* tests/Makefile.am (TESTS): Add null-1.
+	(EXTRA_DIST): Add gen-icase-data.pl
+	(TEST_CASES): Add null.txt
+
+	* tests/null.txt: New file.
+
+	* tests/null-1 (sary): New file.
+
+	* tests/sary-6 (mksary): Add a reproductivity test.
+
+	* tests/sary-8 (mksary): Add tests for sary -C and sary -iC.
+
+	* saryer.c (join_subsequent_region): Fix EOF profblem.
+
+	* sary.c (get_next_region): Use saryer_get_next_tagged_region2
+	instead of saryer_get_next_tagged_region.
+	(get_next_context): Use saryer_get_next_context_lines2 instead of
+	saryer_get_next_context_lines.
+	(get_next_line): Use saryer_get_next_line2 instead of 
+	saryer_get_next_line.
+	(grep_normal): Remove g_free. It's any longer necessary.
+	(grep_normal): Use fwrite instead of fwrite.
+
+	* tests/Makefile.am (TESTS): Add sary-9.
+
+	* tests/gen-icase-data.pl: New file.
+
+	* tests/sary-9 (mksary): New file.
+
+	* tests/sary-5 (mksary): Fix SUFARY detection.
+
+	* tests/mksary-1 (mksary): Fix SUFARY detection.
+
+	* mmap.c (sary_mmap): Fix the empty file handling.
+
+2000-11-19  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary.c (show_help): Renamed from show_usage.
+	(show_version): New function.
+	(show_mini_help): New funtion.
+	(parse_options): Add -v, -h option.
+	
+	* configure.in (COPYRIGHT): Added.
+
+	* mksary.c (parse_options): Use getopt_long instead of getopt.
+	(show_help): Renamed from show_usage.
+	(show_version): New function.
+	(show_mini_help): New function.
+	(parse_options): Add -v, -h option.
+
+	* sary.def: Add saryer_enable_cache.
+
+	* config.h.in: Remove #undef HAVE_GETOPT_H
+
+	* configure.in (AC_CHECK_HEADERS): Remove getopt.h.
+
+2000-11-19  Ryuji Abe  <rug @ namazu.org>
+
+	* sary.def: Follow recent API updates.
+
+	* sary.c: Using included GNU getopt.
+
+	* mksary.c: Likewise.
+
+	* tests/search-benchmark.c: Likewise.
+
+	* Makefile.am (sary_SOURCES): Added getopt.h, getopt.c, and
+	getopt1.c.
+	(mksary_SOURCES): Likewise.
+
+	* makefile.mingw: Add getopt related rules.
+
+	* version.c: Changed sary_?????_version be const.
+
+	* sary.h: Likewise.
+
+	* tests/makefile.mingw: New file.
+
+2000-11-19  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* mmap.h: Add #include <unistd.h>.
+
+	* Makefile.am (libsary_la_SOURCES): Add cache.c and cache.h
+
+	* cache.c: New file.
+
+	* saryer.c (cache_search): New function.
+
+	* tests/Makefile.am (TESTS): Add cache-1
+
+	* tests/cache-1: New file.
+
+	* tests/cache-test.c: New file.
+
+	* configure.in (AM_INIT_AUTOMAKE): Bumped version number to 0.1.5.
+
+	* configure.in (LTVERSION): Set to 5:0:3. (interface added)
+
+	* saryer.c (saryer_enable_cache): New function. (API)
+
+	* saryer.c (init_saryer_states): Add saryer->pattern.skip = 0;
+	(saryer_search2): Remove above line.
+
+	* sary.def: Add saryer_isearch_reset, saryer_icase_search,
+	saryer_icase_search2.
+
+2000-11-18  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* Sary 0.1.4 Released!
+
+	* mksary.c: Use HAVE_GETOPT_H.
+
+	* sary.c: Use HAVE_GETOPT_H.
+
+	* configure.in (AC_CHECK_HEADERS): Add getopt.h
+
+2000-11-17  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* str.c (sary_str_skip_forward): Use memchr instead of strchr.
+	(sary_str_skip_backward): Likewise.
+	(sary_str_seek_forward): Likewise.
+	(sary_str_seek_backward): Likewise.
+
+	* tests/Makefile.am: Add cat-1 and cat-test related codes.
+
+	* tests/cat-1 (mksary): New file.
+
+	* tests/cat-test.c: New file.
+
+	* tests/isearch-test.c (isearch): Use len.
+
+	* saryer.c (saryer_icase_search2): Add g_free(tmppat);
+
+	* tests/isearch-test.c: Remove codes for an interactive mode.
+
+	* config.h.in: Remove #undef HAVE_TERMIOS_H
+
+	* configure.in (AC_CHECK_HEADERS): Remove termios.h.
+
+	* saryer.c (init_saryer_states): New function.
+	(saryer_isearch): Use init_saryer_states.
+	(saryer_search2): Likewise.
+	(saryer_icase_search2): New function.
+
+	* Makefile.am: Arrane search-benchmark rules.
+
+	* tests/search-benchmark.c: Renamed from isearch-benchmark.c
+
+	* Makefile.am: Remove isearch_test related rules.
+
+2000-11-17  Ryuji Abe  <rug @ namazu.org>
+
+	* mmap.c: Fixed typo.
+
+	* sary.def: New file.
+
+	* config.h.win32: New file.
+
+	* makefile.mingw: New file.
+
+	* sary.h.in: Renamed from sary.h for versioning.
+
+	* version.c.in: New file for versioning.
+
+	* configure.in: Add three new variables for 
+	versioning, SARY_MAJOR_VERSION, SARY_MINOR_VERSION
+	and SARY_MICRO_VERSION.
+	(AC_OUTPUT): Add sary.h and version.c.
+
+	* sary.m4: New file.
+
+	* sary.c: Include <getopt.h>.
+
+	* mksary.c: Likewise.
+
+	* isearch-test.c: Likewise.
+
+	* Makefile.am (EXTRA_DIST): Add new files.
+	(libsary_SOURCES): Add version.c.
+	(m4datadir): New variables for sary.m4.
+	(m4data_DATA): Likewise.
+	(sary_LDADD): Set correct libsary location.
+	(mksary_LDADD): Likewise.
+
+2000-11-17  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* saryer.c (expand_letter): New function.
+	(assign_range): New function.
+
+	* tests/Makefile.am (TESTS): Add sary-7, sary-8.
+
+	* saryer.c (search): Allow pattern == NULL.
+
+	* sary.c (parse_options): Add -i option.
+	(ck_atoi): Be GLib-like.
+
+	* saryer.c (saryer_icase_search2): New function. (API)
+	(saryer_icase_search): New function. (API)
+	(icase_search): New function.
+
+	* configure.in (LTVERSION): Add AC_PROG_CC, AC_PROG_INSTALL,
+	AC_PROG_LN_S, AC_PROG_RANLIB
+
+	* saryer.c (saryer_isearch_reset): Be void.
+	(saryer_sort_occurrences): Use is_allocated member.
+
+2000-11-16  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* configure.in (AM_INIT_AUTOMAKE): Bumped version number to 0.1.4.
+
+	* configure.in (LTVERSION): Set to 4:0:2. (interface added)
+
+	* tests/isearch-benchmark.c: New file.
+
+	* tests/isearch-test.c: Moved from $(topdir).
+
+	* tests/Makefile.am: Add rules for isearch-test.
+
+	* tests/Makefile.am (benchmark): New rule.
+
+	* saryer.c (saryer_isearch): Refine g_assert().
+
+	* array.c (qsortcmp): Use sary_text_get_eof().
+
+	* saryer.c (saryer_isearch_reset): New function.
+
+	* text.h: Hide internal of SaryText.
+
+	* saryer.h: Hide internal of Saryer.
+
+	* saryer.h (SaryPattern): New type.
+
+	* tests/mksary-3: New file.
+
+	* tests/Makefile.am (EXTRA_DIST): Add  line-indexer.pl and
+	word-indexer.pl. 
+
+	* tests/word-indexer.pl: New file.
+
+	* mksary.c (parse_options): Add -w option.
+
+	* str.c (sary_str_skip): New function.
+	(sary_str_seek_backward): New function.
+	(sary_str_seek_forward): New function.
+	(sary_str_seek_eol): Transfar to sary_str_seek_forward.
+	(sary_str_seek_bol): Transfar to sary_str_seek_backward.
+	(sary_str_get_whitespaces): New function.
+	(sary_str_skip_backward): New function.
+	(sary_str_skip_forward): New function.
+
+	* text.c (sary_text_goto_next_word): New function.
+
+	* ipoint.c (sary_ipoint_word): New function.
+
+	* tests/Makefile.am (TESTS): Add isearch-1
+
+	* tests/isearch-1: New file.
+
+	* configure.in (AC_CHECK_HEADERS): Add termios.h
+
+	* mksary.c (index): Fix error message.
+	(sort): Likewise.
+
+2000-11-15  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* isearch-test.c (lookup): New file.
+
+	* Makefile.am (noinst_PROGRAMS): New macro.
+	(isearch_test_SOURCES): Likewise.
+	(isearch_test_LDADD): Likewise.
+
+	* sary.c: Remove "include <assert.h>"
+
+	* saryer.c: Likewise.
+
+	* bsearch.c: Likewise.
+
+	* mmap.c: Likewise.
+
+	* saryer.c (saryer_search2): Abolish unnecessary casts.
+	(search): New function.
+	(saryer_isearch): New function. (API)
+
+	* Sary 0.1.3 Released!
+
+2000-11-13  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* configure.in (AM_INIT_AUTOMAKE): Bumped version number to 0.1.3.
+
+	* configure.in (LTVERSION): Set to 3:0:1. (interface added)
+
+	* saryer.c (saryer_get_next_line2): New function.
+	(saryer_get_next_context_lines2): New function.
+	(saryer_get_next_tagged_region2): New function.
+
+	* str.c (sary_str_seek_lines_forward): Change parameter's
+	type. 
+	(sary_str_seek_lines_backward): Likewise.
+
+	* saryer.c (saryer_get_next_context_lines): Change parameter's
+	type. 
+
+	* tests/Makefile.am (TESTS): Add mksary-2
+
+	* tests/mksary-2: New file.
+
+	* str.c (sary_str_seek_pattern_backward2): New function.
+	(sary_str_seek_pattern_forward2): New function.
+	(sary_str_seek_pattern_forward): Transfer to
+	sary_str_seek_pattern_forward2
+	(sary_str_seek_pattern_backward): Transfer to
+	sary_str_seek_pattern_backward2
+
+	* saryer.c (saryer_search2): New function.
+	(saryer_search): Transfer to search_nsearch2.
+	(prefixcmp): Change parameters. Use patlen.
+	(bsearchcmp): Change arguments to prifixcmp.
+
+	* saryer.h (Saryer): Add patlen member.
+
+	* Sary 0.1.2 Released!
+
+	* sary.c: Change variable names.
+
+	* mksary.c (index_and_sort): New function.
+
+	* mmap.c (sary_munmap): Fix munmap bug!
+
+2000-11-12  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* mksary.c (index): New function.
+	(sort): Likewise.
+	(make_array): Abolished.
+	(parse_options): Add -s option.
+
+	* str.c (sary_str_get_linelen): Do not include LF.
+	(sary_str_get_line): Change behavior.
+	(sary_str_get_linelen): Likewise.
+
+	* saryer.c (get_next_region): Simplified.
+
+	* docs/sary.css: Indentation changed.
+
+	* configure.in (AM_INIT_AUTOMAKE): Bumped version number to 0.1.2.
+
+	* configure.in (LTVERSION): Set to 2:0:0. (interface changed)
+
+	* saryer.c (join_subsequent_lines): Removed.
+	(join_subsequent_region): Rewritten.
+	(get_next_region): New function.
+	(seek_lines_backward): Likewise.
+	(seek_lines_forward): Likewise.
+	(seek_pattern_backward): Likewise.
+	(seek_pattern_forward): Likewise.
+	(saryer_get_next_tagged_region): New function.
+	(saryer_get_next_context_lines): Simplified.
+
+	* tests/tagged.txt: New file.
+
+	* tests/sary-6: New file.
+
+2000-11-11  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* sary.c (grep): Renamed from search.
+	(grep): Remove switch statements by employing a function pointer.
+	(grep_count): Renamed from do_count.
+	(grep_normal): Renamed from do_context_grep.
+	(do_grep): Abolished.
+	(get_next_line): New function.
+	(get_next_context): Likewise.
+	(get_next_region): Likewise.
+	(parse_options): Add -s and -e option.
+
+	* saryer.c (saryer_get_next_context_lines): Do not include LF any
+	longer. 
+
+	* mksary.c (dispatch_codeset_func): Fix boundary condition.
+
+2000-11-08  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* saryer.c (saryer_peek_next_position): Renamed from
+	saryer_peek_next_occurrence_position.
+
+	* str.c (sary_str_seek_pattern_backward): New function.
+	(sary_str_seek_pattern_forward): New function.
+	(sary_str_seek_pattern_backward): New function.
+
+	* tests/sary-3: Test cases changed.
+
+	* tests/words.txt: Regenerated. Be a natural dictionary.
+	% cat /usr/dict/words| egrep '^[a-z]+$' |perl sample.pl -1000 
+
+2000-11-07  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* Sary 0.1.1 Released!
+
+	* configure.in (AC_OUTPUT): Add docs/Makefile, docs/en/Makefile, 
+	docs/ja/Makefile, docs/images/Makefile.
+
+	* docs/images/Makefile.am: Ne file.
+
+	* docs/en/Makefile.am: New file.
+
+	* docs/ja/Makefile.am: New file.
+
+	* docs/ja/suffix-array.html: New file.
+
+	* docs/ja/libsary.html: New file.
+
+	* docs/en/suffix-array.html: New file.
+
+	* docs/en/libsary.html: New file.
+
+	* docs/images/*.png: New files.
+
+	* sary.h: New file.
+
+	* sary.c: Renamed from sary-cmd.c
+
+	* saryer.h: Change a type name: Sary -> Saryer
+
+	* saryer.c: Renamed from sary.c
+
+	* saryer.h: Renamed from sary.h
+
+	* sary.spec.in (%files): Add sary.h
+
+	* text.c (sary_text_get_region): New function.
+
+	* str.c (sary_str_get_region): Take eof and g_assert with it.
+
+	* mksary.c (make_array): Modify messages.
+
+	* mksary.c (make_array): Use EXIT_FAILURE.
+
+2000-11-06  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* str.c (sary_str_get_region): Use g_memmove instead of strncpy.
+
+	* sary.c (sary_get_next_occurrence): Remove unnecessary `+ 1'.
+	(sary_get_next_context_lines): Simpified.
+
+	* configure.in (AM_INIT_AUTOMAKE): Bumped version number to 0.1.1.
+
+	* configure.in (LTVERSION): Set to 1:0:0.
+
+	* array.c (sary_array_sort): Renamed from sary_sort().
+	(sary_array_index): Renamed from sary_index().
+
+	* Sary 0.1.0 Released!
+
+	* configure.in (AM_INIT_AUTOMAKE): Bumped version number to 0.1.0.
+
+	* tests/sary-5 (mksary): New file.
+
+	* sary.c (join_subsequent_lines): New function.
+	(get_context_lines): Abolished.
+
+	* mksary.c (show_usage): New function.
+
+	* sary-cmd.c (show_usage): New function.
+	(parse_options): Add new option -l.
+
+	* sary.c (prefixcmp): Use MIN macro.
+
+	* array.c (suffixcmp): Likewise.
+
+	* text.c (sary_text_backward_cursor): Modify overrun handling.
+	(sary_text_forward_cursor): Likewise.
+
+	* configure.in (AC_OUTPUT): Add sary.spec and sary-config.
+
+	* sary-config.in: New file.
+
+	* sary.spec.in (Requires): New file.
+
+2000-11-05  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* ipoint.c (sary_ipoint_char_utf8): Modify if-conditions. Refer to
+	GLib's gutf8.c.
+
+2000-11-04  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* mksary.c (dispatch_codeset_func): Use g_strcasecmp().
+
+	* ipoint.c (sary_ipoint_char_sjis): New function.
+	(sary_ipoint_char_utf8): New function.
+
+	* sary.c (sary_peek_next_occurrence_position): New function.
+	(sary_get_next_occurrence): Change the type of the return value.
+	(sary_count_occurrences): Renamed from sary_get_occurrence_count
+
+	* text.c (sary_text_goto_eol): New function.
+
+2000-11-03  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* mksary.c (parse_options): Add -l option.
+
+	* mksary.c (dispatch_codeset_func): New func.
+
+	* text.c (sary_text_goto_next_line): Use sary_str_seek_eol.
+
+	* ipoint.c (sary_ipoint_line): New function.
+
+	* tests/sary-2: Abolish to use SUFARY's sass.
+
+	* int.h: Renamed from uint.h
+
+	* tests/sary-4: New file.
+
+2000-11-02  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* tests/sample.pl: New file.
+
+	* tests/words.txt: New file.
+
+	* tests/sary-3: New file.
+
+	* str.c (sary_str_get_linelen): Include LF.
+
+	* str.h: New file.
+
+	* str.c: New file.
+
+	* sary.c (sary_get_next_context_lines): New function.
+
+	* text.c (sary_text_backward_cursor): New function.
+
+	* tests/sary-2: New file.
+
+	* tests/mksary-1: New file.
+
+	* tests/eucjp.txt: New file.
+
+	* uint.h: New file. Define the data type for representing unsigned
+	integers.
+
+2000-11-01  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* text.c (sary_text_forward_cursor): New function.
+	(sary_text_goto_next_line): Use g_assert().
+
+	* ipoint.c (sary_ipoint_char_ascii): Use sary_text_is_eof().
+	(sary_ipoint_char_eucjp): Likewise.
+
+	* text.c (sary_text_goto_bol): Change return type.
+	(sary_text_goto_next_line): Likewise.
+
+	* sary.c (qsortcmp): New function.
+	(sary_set_uniq_mode): Likewise.
+	(sary_sort_occurrences): Likewise.
+	(sary_get_next_occurrence): Likewise;
+
+	* sary.h (Sary): Add new members: is_sorted, sorted_occurrences,
+	prev_bol; 
+
+2000-10-30  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* mksary.c: New file.
+
+	* array.c: New file.
+
+	* array.h: New file.
+
+	* ipoint.c: New file.
+
+	* ipoint.h: New file.
+
+	* tests/sary-1: New file.
+
+2000-10-25  Satoru Takabayashi  <satoru-t @ is.aist-nara.ac.jp>
+
+	* text.c: New file.
+
+	* text.h: New file.
+
+	* bsearch.c: New file.
+
+	* bsearch.h: New file.
+
+	* mmap.c: New file.
+
+	* mmap.h: New file.
+
+	* i.h: New file.
+
+	* i.c: New file
+
+	* Development started!
+

@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<link rev=made href="mailto:satoru@namazu.org">
+<title>Brief Introduction to Suffix Array</title>
+<link rel=stylesheet href="../sary.css">
+</head>
+<body>
+<h1>Brief Introduction to Suffix Array</h1>
+<p>Last Modified: 2000-11-14</p>
+<hr>
+
+<p>
+Suffix array is a data structure designed for efficient
+searching of a large text.  The data structure is simply an
+array containing all the pointers to the text suffixes
+sorted in lexicographical (alphabetical) order.  Each suffix
+is a string starting at a certain poinsition in the text and
+ending at the end of the text.  Searching a text can be
+performed by binary search using the suffix array.
+</p>
+
+<p>
+Let's get started with the suffix array construction.
+Suppose that we have the sample text ``abracadabra'' and
+wish to construct the suffix array for the sample text.
+</p>
+
+<p>
+First, we should assign index points to the sample
+text. Index points specify positions where search can be
+performed.  In our example, index points are assigned
+character by character. Thus, we can search the sample text
+with the suffix array at any positions later.
+
+<p class=figure>
+<img src="../images/figure1.png" alt="">
+</p>
+
+
+<p>
+Second, we should sort the index points according to thier
+corresponding suffixes.  The correspondance between the
+index points and the suffixes looks like
+
+<p class=figure>
+<img src="../images/figure2.png" alt="">
+</p>
+
+<p>
+After sorting:
+
+<p class=figure>
+<img src="../images/figure3.png" alt="">
+</p>
+
+
+<p>
+Finally, The resulting index points become the suffix array
+for the sample text.
+</p>
+
+<p class=figure>
+<img src="../images/figure4.png" alt="">
+</p>
+
+<p>
+Search of the sample text can be performed by binary search
+using the created suffix array.  The following figure shows
+the process of searching the sample text for `ra'. Numbered
+arrows shows the order of processing.
+</p>
+
+<p class=figure>
+<img src="../images/figure5.png" alt="">
+</p>
+
+<h2><a name="references">References</a></h2>
+
+<ul>
+<li>Bentley: <a
+href="http://www.programmingpearls.com/">Programming Pearls
+2nd edition</a><br>
+Chapter 15 is a good reference for learning suffix array.
+
+<li>Baeza-Yates et al.: <a
+href="http://sunsite.dcc.uchile.cl/irbook/">Modern
+Information Retrieval</a><br>
+Chapter 8 explains suffix array as well as other data structures.
+
+<li>Manber et al.: <a
+href="http://www.cs.arizona.edu/people/udi/suffix.ps">Suffix
+Arrays - A New Method for On-Line String Searches</a><br>
+The original paper.
+
+<li>Yamashita: <a
+href="http://cl.aist-nara.ac.jp/lab/nlt/ss/doc/saai.pdf">Terminology
+"Suffix Array"</a> (in Japanese),
+Journal of Japanese Society for Artificial Intelligence
+Vol. 15 No. 6 p. 1142
+
+</ul>
+
+<hr>
+<p>
+$Id: suffix-array.html,v 1.1.1.1 2004/06/11 18:57:27 satoru-t Exp $
+</p>
+<address>
+satoru@namazu.org
+</address>
+</body>
+</html>

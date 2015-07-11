@@ -1,0 +1,29 @@
+#! /bin/sh
+
+sary=../src/sary
+mksary=../src/mksary
+
+if grep --version | grep GNU >/dev/null 2>&1; then
+    echo "do nothing" > /dev/null
+else
+    echo "This test requires GNU grep."
+    exit 1
+fi
+
+cp words.txt tmp.words.txt
+$mksary -q tmp.words.txt
+
+first=`head -1 tmp.words.txt`
+last=`tail -1  tmp.words.txt`
+for pat in $first $last `perl sample.pl -20 tmp.words.txt` "Nonexistent"
+do
+    grep  -C2  $pat tmp.words.txt > tmp.grep
+    $sary -C  $pat tmp.words.txt > tmp.sary
+    grep  -A3 $pat tmp.words.txt > tmp.grep
+    $sary -A3 $pat tmp.words.txt > tmp.sary
+    grep  -B5 $pat tmp.words.txt > tmp.grep
+    $sary -B5 $pat tmp.words.txt > tmp.sary
+    cmp tmp.grep tmp.sary || exit 1
+done
+
+exit 0

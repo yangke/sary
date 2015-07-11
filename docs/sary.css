@@ -1,0 +1,21 @@
+@import url(http://namazu.org/~satoru/satoru.css);
+
+p.figure { 
+	text-align: center;
+}
+
+code {
+	font-weight: normal;
+	border-style: solid;
+	padding-left: 1ex;
+	border-width: 0 0 0 medium;
+	border-color: #8888ff; 
+	text-decoration: underline; 
+	color: Navy;
+}
+
+p.lang-navigator {
+	text-align: right;
+	font-size: small;
+}
+

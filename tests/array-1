@@ -1,0 +1,23 @@
+#! /bin/sh
+
+#
+# Test for --array option for sary and mksary.
+#
+
+sary=../src/sary
+mksary=../src/mksary
+
+cat ../COPYING > tmp.array.COPYING
+
+rm -f tmp.array.COPYING.ary tmp.array.COPYING.ARY
+
+$mksary -q --array=tmp.array.COPYING.ARY     tmp.array.COPYING
+$sary   --array=tmp.array.COPYING.ARY GNU tmp.array.COPYING > tmp.sary-1
+
+$mksary -q     tmp.array.COPYING
+$sary   GNU tmp.array.COPYING > tmp.sary-2
+
+cmp tmp.sary-1 tmp.sary-2 || exit 1
+cmp tmp.array.COPYING.ary tmp.array.COPYING.ARY || exit 1
+
+exit 0

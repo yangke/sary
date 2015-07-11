@@ -1,0 +1,24 @@
+#! /bin/sh
+
+sary=../src/sary
+mksary=../src/mksary
+
+cat -n ../configure > tmp.configure
+$mksary -q tmp.configure
+
+for pat in "sed" "gnu" "ac_" "config"; do
+   grep    $pat tmp.configure > tmp.grep
+   $sary   $pat tmp.configure > tmp.sary
+   cmp tmp.grep tmp.sary || exit 1
+done
+
+cat -n eucjp.txt > tmp.eucjp.txt
+$mksary -q -c EUC-JP tmp.eucjp.txt
+
+for pat in "abc" "xyz" "あいう" "えお" "あa" "aあ"; do
+   grep    $pat tmp.eucjp.txt > tmp.grep
+   $sary   $pat tmp.eucjp.txt > tmp.sary
+   cmp tmp.grep tmp.sary || exit 1
+done
+
+exit 0

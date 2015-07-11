@@ -1,0 +1,17 @@
+#! /bin/sh
+# test for mksary -l
+
+mksary=../src/mksary
+
+cat -n ../configure > tmp.configure
+
+$mksary -q -l tmp.configure
+mv tmp.configure.ary tmp.configure.ary-
+
+perl line-indexer.pl tmp.configure > tmp.configure.ary
+$mksary -q -s tmp.configure
+
+cmp tmp.configure.ary tmp.configure.ary-
+test $? != "0" && exit 1
+
+exit 0

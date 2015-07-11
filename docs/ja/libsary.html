@@ -1,0 +1,755 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<link rev=made href="mailto:satoru@namazu.org">
+<title>libsaryリファレンスマニュアル</title>
+<link rel=stylesheet href="../sary.css">
+</head>
+<body>
+<h1>libsaryリファレンスマニュアル</h1>
+<p>最終更新日: 2002-10-22</p>
+<hr>
+
+<h2>目次</h2>
+<!-- AUTO-GENERATED-TOC-START -->
+<ul>
+<li><a href="#sample">サンプルプログラム</a>
+  <ul>
+  <li><a href="#sample-array">Suffix Arrayの構築</a>
+  <li><a href="#sample-search">Suffix Arrayを用いた検索</a>
+  </ul>
+<li><a href="#compile">コンパイルの方法</a>
+<li><a href="#array">Suffix Arrayの構築</a>
+<li><a href="#ipoint">インデックスポイントの割り当て</a>
+<li><a href="#search">Suffix Arrayを用いた検索</a>
+<li><a href="#text">テキスト処理</a>
+<li><a href="#progress">プログレスバーの表示</a>
+<li><a href="#appendix">付録: スクリプト言語の活用</a>
+</ul>
+<!-- AUTO-GENERATED-TOC-END -->
+
+
+
+<!--
+(fset 'htmlize
+   [?< ?d ?t ?> return ?< ?c ?o ?d ?e ?> return ?\C-s ?; ?\C-n ?< ?/ ?c ?o ?d ?e ?> return ?< ?d ?d ?> return return ?\C-n])
+-->
+
+<h2><a name="sample">サンプルプログラム</a></h2>
+
+<h3><a name="sample-array">Suffix Arrayの構築</a></h3>
+
+<p>
+file_name のファイルに対して、 UTF-8エンコーディングの文字単
+位で Suffix Arrayを作成し、ファイル (file_name.ary) に格納す
+る。より詳しい例は <a
+href="http://cvs.namazu.org/sary/src/mksary.c">mksary.c</a> を参
+照のこと。
+</p>
+
+<pre>
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;sary.h&gt;
+  
+int
+main (int argc, char **argv)
+{
+    char *file_name;
+    SaryInt ipoints;
+    gboolean status;
+    SaryBuilder *builder;
+
+    if (argc != 2) exit(2);
+    file_name = argv[1];
+
+    builder = sary_builder_new(file_name);
+    sary_builder_set_ipoint_func(builder, sary_ipoint_char_utf8);
+
+    ipoints = sary_builder_index(builder);
+    if (ipoints == -1) {
+	g_print("error: %s(.ary): %s\n", file_name, g_strerror(errno));
+	exit(2);
+    }
+
+    status = sary_builder_sort(builder);
+    if (status == FALSE) {
+	g_print("error: %s(.ary): %s\n", file_name, g_strerror(errno));
+	exit(2);
+    }
+    sary_builder_destroy(builder);
+    return 0;
+}
+</pre>
+
+<h3><a name="sample-search">Suffix Arrayを用いた検索</a></h3>
+
+<p>
+file_name のファイルに対して、pattern で検索を行い、検索結果
+を出現位置順にソートし、行単位で表示する。検索には file_name 
+用に構築された Suffix Array が必須。より詳しい例は <a
+href="http://cvs.namazu.org/sary/src/sary.c">sary.c</a> 
+を参照のこと。
+</p>
+
+<pre>
+#include &lt;stdlib.h&gt;
+#include &lt;errno.h&gt;
+#include &lt;sary.h&gt;
+
+int
+main (int argc, char **argv)
+{
+    SarySearcher *searcher;
+    char *pattern;
+    char *file_name;
+
+    if (argc != 3) exit(2);
+    pattern = argv[1];
+    file_name = argv[2];
+
+    searcher = sary_searcher_new(file_name);
+    if (searcher == NULL) {
+	g_print("error: %s(.ary): %s\n", file_name, g_strerror(errno));
+	exit(2);
+    }
+
+    if (sary_searcher_search(searcher, pattern)) {
+	gchar *line;
+
+	sary_searcher_sort_occurrences(searcher);
+
+	while ((line = sary_searcher_get_next_line(searcher))) {
+	    g_print("%s", line);
+	    g_free(line);
+	}
+    }
+    sary_searcher_destroy(searcher);
+    return 0;
+}
+</pre>
+
+<h2><a name="compile">コンパイルの方法</a></h2>
+
+<p>
+libsary を用いたプログラム program.c をコンパイルするには次
+のように実行します。本格的な開発には <a
+href="http://sources.redhat.com/autoconf/">autoconf</a>, <a
+href="http://sources.redhat.com/automake/">automake</a>, <a
+href="http://www.gnu.org/software/libtool/libtool.html">libtool</a> 
+の利用をお勧めします。
+</p>
+
+<pre>
+  % gcc program.c -o program `pkg-config sary --libs` `pkg-config sary --cflags`
+</pre>
+
+
+<h2><a name="array">Suffix Arrayの構築</a></h2>
+
+<dl>
+<dt><code>
+SaryBuilder*    sary_builder_new        (const gchar *file_name)
+</code>
+<dd>
+
+SaryBuilder オブジェクトを生成します。SaryBuilder オブジェク
+トはインデックスポイントの割り当てと Suffix Array のソートを
+行いますfile_name には Suffix Array のファイル名を指定します。
+失敗したときは NULL を返します。
+
+<dt>
+<code>
+SaryBuilder*	sary_builder_new2		(const gchar *file_name,
+						 const gchar *array_name);
+</code>
+<dd>
+array_name で Suffix Array のファイル名を指定する以外は 
+sary_builder_new と同様です。
+
+<dt>
+<code>
+void		sary_builder_destroy		(SaryBuilder *builder);
+</code>
+<dd>
+SaryBuilder オブジェクトを破壊します。
+
+
+<dt>
+<code>
+void		sary_builder_set_ipoint_func	(SaryBuilder *builder,
+						 SaryIpointFunc ipoint_func);
+</code>
+<dd>
+
+インデックスポイントの割り当てに用いる関数を設定します。
+ipoint_func で指定する関数は、<a href="#ipoint">標準で用意さ
+れている関数</a> を使うだけでなく、SaryIpointFunc のインター
+フェイスに従って自分で定義した関数を使うこともできます。
+
+<dt>
+<code>
+SaryInt		sary_builder_index		(SaryBuilder *builder);
+</code>
+<dd>
+
+インデックスポイントの割り当てを行います。返り値はとして割り
+当てたインデックスポイントの数を返します。失敗したときは -1 
+を返します。
+
+<dt>
+<code>
+gboolean	sary_builder_sort		(SaryBuilder *builder);
+</code>
+<dd>
+
+Suffix Array のソートを行います。成功したときは TRUEを、失敗
+したときは FALSEを返します。
+
+<dt>
+<code>
+gboolean	sary_builder_block_sort		(SaryBuilder *builder);
+</code>
+<dd>
+
+Suffix Array のソートを行います。ブロック単位で分割してソー
+トを行うため、メモリを節約できます。成功したときは TRUEを、
+失敗したときは FALSEを返します。
+
+<dt>
+<code>
+void		sary_builder_set_block_size	(SaryBuilder *builder,
+						 SaryInt block_size);
+</code>
+<dd>
+
+sary_builder_block_sort 用のブロックサイズを設定します。
+
+<dt>
+<code>
+void		sary_builder_set_nthreads	(SaryBuilder *builder,
+						 SaryInt nthreads);
+</code>
+<dd>
+
+sary_builder_block_sort を実行するときのスレッドの数を指定し
+ます。CPU が複数ある計算機では速度が向上します。
+
+
+<dt>
+<code>
+void		sary_builder_connect_progress	(SaryBuilder *builder,
+						 SaryProgressFunc 
+						 	progress_func,
+						 gpointer progress_func_data);
+</code>
+<dd>
+
+プログレスバーを表示するための関数 progress_func とその関数
+に必要なデータ progress_func_data を SaryBuilder オブジェク
+トに結びつけます。
+
+</dl>
+
+<h2><a name="ipoint">インデックスポイントの割り当て</a></h2>
+
+<dl>
+<dt>
+<code>
+gchar*          sary_ipoint_char_ascii  (SaryText *text)
+</code>
+<dd>
+
+ASCII文字 (1オクテット)ごとにインデックスポイントを割り当て、
+その位置を返します。テキストの末尾まで到達したら NULL を返し
+ます。
+
+<dt>
+<code>
+gchar*          sary_ipoint_char_eucjp  (SaryText *text)
+</code>
+<dd>
+
+EUC-JPエンコーディングの文字にインデックスポイントを割り当て、
+その位置を返します。テキストの末尾まで到達したら NULL を
+返します。
+
+<dt>
+<code>
+gchar*          sary_ipoint_char_sjis   (SaryText *text)
+</code>
+<dd>
+
+Shift_JISエンコーディングの文字にインデックスポイントを割り
+当て割り当て、その位置を返します。テキストの末尾まで到達したら NULL を返します。
+
+<dt>
+<code>
+gchar*          sary_ipoint_char_utf8   (SaryText *text)
+</code>
+<dd>
+
+UTF-8エンコーディングの文字にインデックスポイントを割り当て、
+その位置を返します。テキストの末尾まで到達したら NULL を返し
+ます。
+
+<dt>
+<code>
+gchar*          sary_ipoint_line        (SaryText *text)
+</code>
+<dd>
+
+行単位でインデックスポイントを割り当て、その位置を返します。
+テキストの末尾まで到達したら NULL を返します。
+
+</dl>
+
+<h2><a name="search">Suffix Arrayを用いた検索</a></h2>
+
+<p>
+注意: sary_searcher_search2, sary_searcher_get_next_line2,
+sary_searcher_get_next_context_lines2,
+sary_searcher_get_next_tagged_region2 はスクリプト言語用のバンディ
+ングを書く人、あるいは効率に熱心な人のために用意されています。
+これらの関数では文字列は長さとともに扱われるため、'\0' 文字
+を中に含んでも構いません。新しい文字列が生成されることはあり
+ません。
+</p>
+
+
+<dl>
+<dt>
+<code>
+SarySearcher*           sary_searcher_new                            (const gchar 
+                                                         *file_name)
+</code>
+<dd>
+SarySearcherオブジェクトを生成します。SarySearcherオブジェクトは検索と検
+索結果の扱いの面倒をみてくれます。SarySearcher は Suffix Array
+Searcher の略です。 file_nameには検索対象のファイル名を指定
+します。失敗したときは NULL を返します。
+
+<dt>
+<code>
+SarySearcher*           sary_searcher_new2               (const gchar *file_name,
+                                             const gchar *array_name)
+</code>
+<dd>
+array_name で Suffix Array のファイル名を指定する以外は 
+sary_searcher_new と同様です。
+
+<dt>
+<code>
+void            sary_searcher_destroy                          (SarySearcher *searcher)
+</code>
+<dd>
+SarySearcherオブジェクトを破壊します。
+
+<dt>
+<code>
+void            sary_searcher_enable_cache                     (SarySearcher *searcher)
+</code>
+<dd>
+キャッシュ機構を働かせます。検索結果をキャッシュし、同じパター
+ンでの 2度目以降の検索を高速化します。
+
+<dt>
+<code>
+gboolean        sary_searcher_search                           (SarySearcher *searcher, 
+                                                         const gchar *pattern)
+</code>
+<dd>
+検索を行います。pattern には検索のキーワードを指定します。成
+功したときは TRUEを、失敗したときは FALSE を返します。
+
+<dt>
+<code>
+gboolean        sary_searcher_search2                  (SarySearcher *searcher, 
+                                                 const gchar *pattern,
+						 SaryInt len)
+</code>
+<dd>
+pattern の長さ len を指定して検索を行います。pattern には検
+索のキーワードを指定します。成功したときは TRUEを、失敗した
+ときは FALSE を返します。
+
+<dt>
+<code>
+gboolean        sary_searcher_isearch                  (SarySearcher *searcher, 
+                                                 const gchar *pattern,
+						 SaryInt len)
+</code>
+<dd>
+
+sary_searcher_search2 とほぼ同じですが、この関数は効率のよいインク 
+リンタル検索を行います。検索は前回の検索結果の範囲の中で行わ 
+れます (初回は sary_searcher_search2 と同じ動作をします)。pattern 
+を固定して、lenの値をpattern の長さまで徐々に大きくしながら
+連続して呼び出すことによりインクリメンタル検索ができます。 
+sary_searcher_sort_occurrences との併用はできません。 成功したとき
+は TRUEを、失敗したときは FALSE を返します。
+
+<dt>
+<code>
+gboolean        sary_searcher_isearch_reset            (SarySearcher *searcher)
+</code>
+<dd>
+
+sary_searcher_isearch 用の内部状態をリセットします。新たな pattern 
+で sary_searcher_isearch を呼び出すときは、事前にこの関数を実行して
+内部状態をリセットしてください。
+
+<dt>
+<code>
+gboolean        sary_searcher_icase_search                     (SarySearcher *searcher, 
+                                                         const gchar *pattern)
+</code>
+<dd>
+アルファベットの大文字小文字を区別しない検索を行います。
+pattern には検索のキーワードを指定します。成功したときは 
+TRUEを、失敗したときは FALSE を返します。
+
+<dt>
+<code>
+gboolean        sary_searcher_icase_search2            (SarySearcher *searcher, 
+                                                 const gchar *pattern,
+						 SaryInt len)
+</code>
+<dd>
+pattern の長さ len を指定してアルファベットの大文字小文字を
+区別しない検索を行います。pattern には検索のキーワードを指定
+します。成功したときは TRUEを、失敗したときは FALSE を返しま
+す。
+
+<dt>
+<code>
+SaryText*       sary_searcher_get_text                         (SarySearcher *searcher)
+</code>
+<dd>
+検索対象の SaryText オブジェクトを返します。
+
+<dt>
+<code>
+SaryMmap*       sary_searcher_get_array                        (SarySearcher *searcher)
+</code>
+<dd>
+mmap された Suffix Array を返します。
+
+<dt>
+<code>
+gchar*          sary_searcher_get_next_line                    (SarySearcher *searcher)
+</code>
+<dd>
+
+次の検索結果を行単位で新しい文字列として取り出します。この関
+数を連続して呼ぶと、すべての検索結果が得られます。残りの検索
+結果がないときは NULL を返します。返り値は後から g_free する
+必要があります。
+
+<dt>
+<code>
+gchar*		sary_searcher_get_next_line2		(SarySearcher *searcher, 
+						 SaryInt *len)
+</code>
+<dd>
+
+次の検索結果を行単位で先頭位置のポインタとして取り出します。
+文字列の長さをlen に書き込みます。この関数を連続して呼ぶと、
+すべての検索結果が得られます。残りの検索結果がないときは 
+NULL を返します。
+
+
+<dt>
+<code>
+gchar*          sary_searcher_get_next_context_lines           (SarySearcher *searcher, 
+                                                         SaryInt backward, 
+                                                         SaryInt forward)
+</code>
+<dd>
+次の検索結果をコンテクスト行単位で新しい文字列として取り出し
+ます。最後の改行記号 '\n' は文字列に含みます。この関数を連続
+して呼ぶと、すべての検索結果が得られます。残りの検索結果がな
+いときは NULL を返します。返り値は後から g_free する必要があ
+ります。
+
+<dt>
+<code>
+gchar*		sary_searcher_get_next_context_lines2	(SarySearcher *searcher, 
+						 SaryInt backward, 
+						 SaryInt forward,
+						 SaryInt *len)
+</code>
+<dd>
+次の検索結果をコンテクスト行単位で先頭位置のポインタとして取
+り出します。最後の改行記号 '\n' は文字列に含みます。文字列
+の長さをlen に書き込みます。この関数を連続して呼ぶと、すべて
+の検索結果が得られます。残りの検索結果がないときは NULL を返
+します。
+
+<dt>
+<code>
+gchar*		sary_searcher_get_next_tagged_region	(SarySearcher *searcher, 
+						 const gchar *start_tag,
+						 const gchar *end_tag)
+</code>
+<dd>
+次の検索結果を start_tag と end_tag で挟まれた範囲の新しい文
+字列として取り出します (start_tag と end_tag を含みます)。こ
+の関数を連続して呼ぶと、すべての検索結果が得られます。残りの
+検索結果がないときは NULL を返します。返り値は後から g_free 
+する必要があります。
+
+<dt>
+<code>
+gchar*		sary_searcher_get_next_tagged_region2	(SarySearcher *searcher,
+						 const gchar *start_tag,
+						 SaryInt start_tag_len,
+						 const gchar *end_tag,
+						 SaryInt end_tag_len,
+						 SaryInt *len)
+</code>
+<dd>
+次の検索結果を start_tag と end_tag で挟まれた範囲の先頭位置
+をポインタとして取り出します (start_tag と end_tag を含みま
+す)。文字列の長さをlen に書き込みます。start_tag と end_tag 
+の長さをそれぞれ start_tag_len とend_tag_len で指定します。
+この関数を連続して呼ぶと、すべての検索結果が得られます。残り
+の検索結果がないときは NULL を返します。
+
+<dt>
+<code>
+SaryText*       sary_searcher_get_next_occurrence              (SarySearcher *searcher)
+</code>
+<dd>
+次の検索結果を SaryText オブジェクトとして返します。低レベル
+のテキスト処理を行う際に用います。この関数を連続して呼ぶと、
+すべての検索結果が得られます。残りの検索結果がないときは 
+NULL を返します。
+
+<dt>
+<code>
+SaryInt        sary_searcher_get_next_occurrence              (SarySearcher *searcher)
+</code>
+<dd>
+次の検索結果を SaryInt の値として返します。
+この関数を連続して呼ぶと、すべての検索結果が得られます。
+残りの検索結果がないときは -1 を返します。
+
+<dt>
+<code>
+SaryInt         sary_searcher_count_occurrences                (SarySearcher *searcher)
+</code>
+<dd>
+検索のヒット数を返します。
+
+<dt>
+<code>
+void            sary_searcher_sort_occurrences                 (SarySearcher *searcher)
+</code>
+<dd>
+検索結果を出現位置順にソートします。
+
+</dl>
+
+<h2><a name="text">テキスト処理</a></h2>
+
+<p>
+テキスト処理には SaryText オブジェクトを利用します。このオブ
+ジェクトはカーソルという状態を持っており、オブジェクトに対す
+る操作はこのカーソルを元にして行われます。
+</p>
+
+<dl>
+<dt>
+<code>
+SaryText*       sary_text_new                   (const gchar *file_name)
+</code>
+<dd>
+file_name 用の SaryTextオブジェクトを生成します。失敗したと
+きは NULL を返します。
+
+<dt>
+<code>
+void            sary_text_destroy               (SaryText *text)
+</code>
+<dd>
+SaryTextオブジェクトを破壊します。
+
+<dt>
+<code>
+SaryInt         sary_text_get_lineno            (SaryText *text)
+</code>
+<dd>
+カーソル位置の行番号を返します。(libsaryではほとんど使い道がありません)
+
+<dt>
+<code>
+void            sary_text_set_lineno            (SaryText *text, 
+                                                 SaryInt lineno)
+</code>
+<dd>
+カーソル位置の行番号を設定します。(libsaryではほとんど使い道がありません)
+
+<dt>
+<code>
+SaryInt         sary_text_get_linelen           (SaryText *text)
+</code>
+<dd>
+カーソル位置の行の長さを返します。行の長さに改行記号 '\n' は
+含みません。カーソルがファイル末尾にあるときは 0 を返します。
+
+
+<dt>
+<code>
+gchar*          sary_text_get_line              (SaryText *text)
+</code>
+<dd>
+カーソル位置の行を新しい文字列として返します。改行記号 '\n' 
+は文字列に含みます。カーソルがファイル末尾にあるときは NULL 
+を返します。返り値は後から g_free する必要があります。
+
+<dt>
+<code>
+gchar*          sary_text_get_region            (SaryText *cursor, 
+                                                 SaryInt len)
+</code>
+<dd>
+カーソル位置から len 文字分の領域を新しい文字列として返しま
+す。返り値は後から g_free する必要があります。
+
+<dt>
+<code>
+gboolean        sary_text_is_eof                (SaryText *text)
+</code>
+<dd>
+カーソルがファイルの末尾の位置にあれば TRUEを、そうでなけれ
+ば FALSE を返します。
+
+<dt>
+<code>
+gchar*          sary_text_get_cursor            (SaryText *text)
+</code>
+<dd>
+カーソルの位置を返します。
+
+<dt>
+<code>
+void            sary_text_set_cursor            (SaryText *text, 
+                                                 gchar *cursor)
+</code>
+<dd>
+カーソルの位置を設定します。
+
+<dt>
+<code>
+gchar*          sary_text_get_bof               (SaryText *text)
+</code>
+<dd>
+ファイルの先頭の位置を返します。
+
+<dt>
+<code>
+gchar*          sary_text_get_eof               (SaryText *text)
+</code>
+<dd>
+ファイルの末尾の位置を返します。
+
+<dt>
+<code>
+gchar*          sary_text_goto_bol              (SaryText *text)
+</code>
+<dd>
+カーソルを行頭に進めます。移動後のカーソルの位置を返します。
+
+<dt>
+<code>
+gchar*          sary_text_goto_eol              (SaryText *text)
+</code>
+<dd>
+カーソルを行末に進めます。移動後のカーソルの位置を返します。
+
+
+<dt>
+<code>
+gchar*          sary_text_goto_next_line        (SaryText *text)
+</code>
+<dd>
+カーソルを次の行に進めます。移動後のカーソルの位置を返します。
+
+<dt>
+<code>
+gchar*          sary_text_goto_next_word        (SaryText *text)
+</code>
+<dd>
+
+カーソルを次の単語に進めます。単語は空白によって区切られた文
+字列です。移動後のカーソルの位置を返します。
+
+
+<dt>
+<code>
+gchar*          sary_text_forward_cursor        (SaryText *text, 
+                                                 SaryInt len)
+</code>
+<dd>
+カーソルを len バイト進めます。移動後のカーソルの位置を返します。
+
+<dt>
+<code>
+gchar*          sary_text_backward_cursor       (SaryText *text, 
+                                                 SaryInt len)
+</code>
+<dd>
+カーソルを len バイト後退します。移動後のカーソルの位置を返します。
+
+</dl>
+
+<h2><a name="progress">プログレスバーの表示</a></h2>
+
+<p>
+<a
+href="http://cvs.namazu.org/sary/src/mksary.c">mksary.c</a>
+の progress_bar 関数を参考にしてください。
+</p>
+
+
+<h2><a name="appendix">付録: スクリプト言語の活用</a></h2>
+
+<p>
+インデックスポイントの割り当ては Perl などのスクリプト言語で
+簡単に行うことができます。複雑なテキスト処理を要するときはス
+クリプト言語を利用すると便利です。次の例は行頭にインデックス
+ポイントを割り当てる例です。
+</p>
+
+<pre>
+  % cat line-indexer.pl
+  $offset = 0;
+  while (&lt;&gt;) {
+      print pack 'N', $offset;
+      $offset += length;
+  }
+
+  % perl line-indexer.pl foobar.txt &gt; foobar.txt.ary
+</pre>
+
+<p>
+このようにして作成した foobar.txt.ary ファイルを mksary -s 
+でソートすれば、 Suffix Array が完成します。
+</p>
+
+<pre>
+  % mksary -s foobar.txt
+</pre>
+
+
+<hr>
+<p>
+$Id: libsary.html,v 1.1.1.1 2004/06/11 18:57:27 satoru-t Exp $
+</p>
+<address>
+satoru@namazu.org
+</address>
+</body>
+</html>
