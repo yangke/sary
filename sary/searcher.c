@@ -130,6 +130,31 @@ static gchar*		seek_tag_forward	(const gchar *cursor,
 						 gconstpointer tag_ptr);
 static gboolean		has_prev_as_prefix	(const gchar *prev,
                                                  const gchar *cur);
+/**
+ * saryer_get_next_offset:
+ * @SarySearcher: a #SarySearcher.
+ *
+ * Get the next search result as #SaryText. The function is useful for low-level
+ * text processing. The all results can be retrieved by calling the functions
+ * continuously.
+ *
+ * Returns: the next search result as #SaryText; NULL if no more results.
+ *
+ **/
+SaryInt
+saryer_get_next_offset (SarySearcher *searcher)
+{
+    SaryInt offset;
+
+    if (searcher->cursor > searcher->last) {
+	return -1;
+    }
+
+    offset = GINT_FROM_BE(*(searcher->cursor));
+    searcher->cursor++;
+
+    return offset;
+}
 
 SarySearcher *
 sary_searcher_new (const gchar *file_name)

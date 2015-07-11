@@ -49,6 +49,7 @@ gboolean      sary_searcher_multi_search            (SarySearcher *searcher,
                                                      gint npatterns);
 SaryText*     sary_searcher_get_text                (SarySearcher *searcher);
 SaryMmap*     sary_searcher_get_array               (SarySearcher *searcher);
+SaryInt         saryer_get_next_offset          (SarySearcher *searcher);//patch for polygraph, by @yangke 2015-6-20
 gchar*        sary_searcher_get_next_line           (SarySearcher *searcher);
 gchar*        sary_searcher_get_next_line2          (SarySearcher *searcher, 
                                                      SaryInt *len);
